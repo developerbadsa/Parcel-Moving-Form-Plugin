@@ -3,7 +3,7 @@
  * Plugin Name: Parcel Moving Form
  * Description: A plugin for handling parcel moving form submission and saving data to the database.
  * Version: 1.0
- * Author: Rahim
+ * Author: Rahim-Badsa
  */
 
 // Create the database table on plugin activation
@@ -54,6 +54,12 @@ function parcel_moving_enqueue_scripts() {
 
 add_action('wp_enqueue_scripts', 'parcel_moving_enqueue_scripts');
 
+
+
+
+
+
+// Handle form submission ----------------------------------------------------------------
 // Handle form submission
 add_action('wp_ajax_nopriv_parcel_moving_form_submit', 'parcel_moving_form_submit');
 add_action('wp_ajax_parcel_moving_form_submit', 'parcel_moving_form_submit');
@@ -75,7 +81,7 @@ function parcel_moving_form_submit() {
         $email = sanitize_email($_POST['email']);
         $extra_data = sanitize_textarea_field($_POST['extra_data']);
 
-        // Log sanitized input for debugging
+        // Log sanitized input for debugging (optional)
         error_log(print_r($_POST, true));
 
         // Insert into the database
@@ -103,28 +109,55 @@ function parcel_moving_form_submit() {
     } else {
         wp_send_json_error('Invalid request method.');
     }
-    wp_die();
+    wp_die(); // This is required to properly terminate AJAX requests in WordPress
 }
 
-// Shortcode function to display the parcel moving form
+// Enqueue script and localize variables
+add_action('wp_enqueue_scripts', function() {
+// Enqueue jQuery and your custom script
+add_action('wp_enqueue_scripts', function() {
+    wp_enqueue_script('jquery'); // Ensure jQuery is loaded
+    wp_enqueue_script('parcel-moving-script', get_template_directory_uri() . '/path-to-your-js-file/parcel-moving.js', array('jquery'), null, true);
+    wp_localize_script('parcel-moving-script', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
+});
+
+});
+
+
+
+
 function parcel_moving_form_shortcode() {
     ob_start(); // Start output buffering to return form HTML
     ?>
     <form id="parcel-moving-form">
         <?php wp_nonce_field('parcel_moving_nonce_action', 'parcel_moving_nonce'); ?>
-        <label>From Location: <input type="text" id="from_location" name="from_location" value="Default From Location" required></label><br>
-    <label>To Location: <input type="text" id="to_location" name="to_location" value="Default To Location" required></label><br>
-    <label>Date: <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label><br>
-    <label>First Name: <input type="text" id="first_name" name="first_name" value="Default First Name" required></label><br>
-    <label>Last Name: <input type="text" id="last_name" name="last_name" value="Default Last Name" required></label><br>
-    <label>Email: <input type="email" id="email" name="email" value="default@example.com" required></label><br>
-    <label>Extra Data: <textarea id="extra_data" name="extra_data">Default extra data...</textarea></label><br>
-    <input type="submit" value="Submit">
+        <label>From Location: <input type="text" id="from_location" name="from_location" required></label><br>
+        <label>To Location: <input type="text" id="to_location" name="to_location" required></label><br>
+        <label>Date: <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label><br>
+        <button type="button" id="goto-button">Go to Additional Data</button> <!-- Button to open modal -->
+
+            <!-- Modal for Extra Data -->
+    <div id="extra-data-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
+        <div style="background: white; margin: auto; padding: 20px; width: 300px; position: relative; top: 50%; transform: translateY(-50%);">
+            <h2>Additional Data</h2>
+            <label>First Name: <input type="text" id="first_name" name="first_name" required></label><br>
+            <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
+            <label>Email: <input type="email" id="email" name="email" required></label><br>
+            <label>Extra Data: <textarea id="extra_data" name="extra_data" required></textarea><br></label>
+            <button id="submit-extra-data" type="submit">Submit</button>
+            <button id="cancel-modal">Cancel</button>
+        </div>
+    </div>
     </form>
+
+
     <?php
     return ob_get_clean(); // Return the form HTML
 }
 add_shortcode('parcel_moving_form', 'parcel_moving_form_shortcode');
+
+
+
 
 // Add admin menu page to view form submissions
 function parcel_moving_add_admin_menu() {
