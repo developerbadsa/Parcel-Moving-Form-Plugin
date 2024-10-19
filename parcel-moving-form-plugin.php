@@ -58,7 +58,7 @@ register_activation_hook(__FILE__, 'parcel_moving_create_table');
 
 // Enqueue JavaScript for AJAX submission
 function parcel_moving_enqueue_scripts() {
-    wp_enqueue_script('jquery'); // Ensure jQuery is loaded
+    wp_enqueue_script('jquery');
     wp_enqueue_script(
         'parcel-moving-script',
         plugins_url('parcel-moving.js', __FILE__),
