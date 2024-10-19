@@ -1,11 +1,37 @@
 <?php
 /**
  * Plugin Name: Parcel Moving Form
- * Description: A plugin for handling parcel moving form submission and saving data to the database.
+ * Description: A plugin for handling parcel moving form submissions. It allows users to submit details regarding parcel movement, which are then saved to the database. The plugin also sends notification emails to both the user and the admin upon successful submission.
  * Version: 1.0
  * Author: Rahim-Badsa
+ * Author URI: https://example.com  // (Optional) Add your website or profile URL
+ * License: GPL2  // (Optional) Specify the license under which the plugin is distributed
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html  // (Optional) Provide a link to the license
+ * Text Domain: parcel-moving-form  // (Optional) For internationalization support
+ *
+ * == Description ==
+ *
+ * The Parcel Moving Form plugin provides a user-friendly interface for submitting parcel movement requests. Users can specify the locations, date, and personal details through a multi-step form. All submissions are saved in a custom database table and can be viewed in the WordPress admin panel. 
+ *
+ * Upon submission, confirmation emails are sent to both the user and the admin, ensuring that both parties are informed about the request.
+ *
+ * == Features ==
+ * - User-friendly multi-step form for parcel movement requests
+ * - Database storage for submitted form data
+ * - Email notifications to users and admin upon form submission
+ * - Admin interface to view all submissions
+ *
+ * == Installation ==
+ * 1. Upload the plugin files to the `/wp-content/plugins/` directory.
+ * 2. Activate the plugin through the 'Plugins' menu in WordPress.
+ * 3. Use the `[parcel_moving_form]` shortcode to display the form on a page or post.
+ *
+ * == Changelog ==
+ * = 1.0 =
+ * * Initial release of the Parcel Moving Form plugin.
  */
 
+ 
 // Create the database table on plugin activation
 function parcel_moving_create_table() {
     global $wpdb;
@@ -119,7 +145,7 @@ function parcel_moving_form_submit() {
             $message_admin .= "Extra Data: $extra_data\n\n";
             $message_admin .= "Please log in to the admin panel to view more details.";
 
-            
+
 // Send the email to the user
 $user_email_sent = wp_mail($email, $subject_user, $message_user, $headers);
 if (!$user_email_sent) {
