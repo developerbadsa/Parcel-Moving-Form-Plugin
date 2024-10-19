@@ -52,6 +52,8 @@ add_action('wp_enqueue_scripts', 'parcel_moving_enqueue_scripts');
 add_action('wp_ajax_nopriv_parcel_moving_form_submit', 'parcel_moving_form_submit');
 add_action('wp_ajax_parcel_moving_form_submit', 'parcel_moving_form_submit');
 
+
+
 function parcel_moving_form_submit() {
     // Check nonce for security
     if (!isset($_POST['parcel_moving_nonce']) || !wp_verify_nonce($_POST['parcel_moving_nonce'], 'parcel_moving_nonce_action')) {
@@ -88,13 +90,66 @@ function parcel_moving_form_submit() {
         if ($result === false) {
             wp_send_json_error('Error saving data to the database.');
         } else {
-            wp_send_json_success('Form submitted successfully and data saved.');
+
+            // Send Email to User
+            $subject_user = 'Your Parcel Moving Request';
+            $message_user = "Hello $first_name $last_name,\n\n";
+            $message_user .= "Thank you for submitting your parcel moving request. Here are the details of your submission:\n\n";
+            $message_user .= "From: $from_location\n";
+            $message_user .= "To: $to_location\n";
+            $message_user .= "Date: $date\n";
+            $message_user .= "Extra Data: $extra_data\n\n";
+            $message_user .= "We will contact you shortly regarding the next steps.\n\n";
+            $message_user .= "Thank you,\nYour Parcel Moving Service Team";
+            $headers = array('Content-Type: text/plain; charset=UTF-8');
+
+            // Send the email to the user
+            wp_mail($email, $subject_user, $message_user, $headers);
+
+            // Send Email to Admin
+            $admin_email = get_option('admin_email'); // Get the admin email from WordPress settings
+            $subject_admin = 'New Parcel Moving Request Submission';
+            $message_admin = "A new parcel moving request has been submitted. Here are the details:\n\n";
+            $message_admin .= "From: $from_location\n";
+            $message_admin .= "To: $to_location\n";
+            $message_admin .= "Date: $date\n";
+            $message_admin .= "First Name: $first_name\n";
+            $message_admin .= "Last Name: $last_name\n";
+            $message_admin .= "Email: $email\n";
+            $message_admin .= "Extra Data: $extra_data\n\n";
+            $message_admin .= "Please log in to the admin panel to view more details.";
+
+            
+// Send the email to the user
+$user_email_sent = wp_mail($email, $subject_user, $message_user, $headers);
+if (!$user_email_sent) {
+    error_log('Email to user failed to send.');
+}
+
+// Send the email to the admin
+$admin_email_sent = wp_mail($admin_email, $subject_admin, $message_admin, $headers);
+if (!$admin_email_sent) {
+    error_log('Email to admin failed to send.');
+}
+
+// Check if both emails were sent successfully
+if ($user_email_sent && $admin_email_sent) {
+    wp_send_json_success('Form submitted successfully, and an email has been sent to both the user and the admin.');
+} else {
+    wp_send_json_error('Form submitted successfully, but there was an issue sending the email(s).');
+}
+
+
+
+
         }
     } else {
         wp_send_json_error('Invalid request method.');
     }
     wp_die(); // This is required to properly terminate AJAX requests in WordPress
 }
+
+
 
 // Shortcode to display the form
 function parcel_moving_form_shortcode() {
