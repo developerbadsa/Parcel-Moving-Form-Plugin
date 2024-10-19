@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
 
 
 
-      event.preventDefault();\
+      event.preventDefault();
 
       // Collect data from user
       const finalData = {
