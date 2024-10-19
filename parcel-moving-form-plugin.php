@@ -1,85 +1,72 @@
 <?php
-/*
-Plugin Name: Parcel Moving Form Plugin
-Description: A custom multi-step form for parcel moving service.
-Version: 1.0
-Author: Rahim
-*/
+/**
+ * Plugin Name: Parcel Moving Form
+ * Description: A plugin for handling parcel moving form submission and saving data to the database.
+ * Version: 1.0
+ * Author: Rahim
+ */
 
-// Hook to add the form via shortcode
-add_shortcode('parcel_moving_form', 'parcel_moving_form_shortcode');
+// Create the database table on plugin activation
+function parcel_moving_create_table() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'parcel_moving_data';
+    $charset_collate = $wpdb->get_charset_collate();
 
-// Function to display the multi-step form
-function parcel_moving_form_shortcode() {
-    ob_start();
-    ?>
-    <form id="parcel-moving-form">
-        <div id="step-1">
-            <h2>Step 1: Parcel Information</h2>
-            <label for="from-location">From Location:</label>
-            <input type="text" id="from-location" name="from_location" required>
+    $sql = "CREATE TABLE $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        from_location varchar(255) NOT NULL,
+        to_location varchar(255) NOT NULL,
+        date date NOT NULL,
+        first_name varchar(255) NOT NULL,
+        last_name varchar(255) NOT NULL,
+        email varchar(255) NOT NULL,
+        extra_data text,
+        time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
 
-            <label for="to-location">To Location:</label>
-            <input type="text" id="to-location" name="to_location" required>
-
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" required>
-
-            <button type="button" id="next-step">Next</button>
-        </div>
-        
-        <div id="step-2" style="display:none;">
-            <h2>Step 2: Personal Information</h2>
-            <label for="first-name">First Name:</label>
-            <input type="text" id="first-name" name="first_name" required>
-
-            <label for="last-name">Last Name:</label>
-            <input type="text" id="last-name" name="last_name" required>
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="extra-data">Additional Data:</label>
-            <textarea id="extra-data" name="extra_data"></textarea>
-
-            <button type="submit">Submit</button>
-        </div>
-    </form>
-
-    <script>
-    document.getElementById('next-step').addEventListener('click', function() {
-        document.getElementById('step-1').style.display = 'none';
-        document.getElementById('step-2').style.display = 'block';
-    });
-
-    document.getElementById('parcel-moving-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
-
-        fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Form Submitted Successfully!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
-    </script>
-    <?php
-    return ob_get_clean();
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
 }
+register_activation_hook(__FILE__, 'parcel_moving_create_table');
+
+// Enqueue JavaScript for AJAX submission
+function parcel_moving_enqueue_scripts() {
+    // Enqueue the JavaScript file
+    wp_enqueue_script(
+        'parcel-moving-script', // Handle for the script
+        plugins_url('parcel-moving.js', __FILE__), // Path to the JavaScript file
+        array('jquery'), // Dependencies (jQuery)
+        '1.0', // Version
+        true // Load in the footer
+    );
+
+    // Localize the script to pass the AJAX URL and nonce from PHP to JavaScript
+    wp_localize_script(
+        'parcel-moving-script', // Handle of the script
+        'ajax_object', // Name of the JS object
+        array(
+            'ajax_url' => admin_url('admin-ajax.php'), // Data we want to pass
+            'nonce' => wp_create_nonce('parcel_moving_nonce_action') // Create nonce for security
+        )
+    );
+}
+
+add_action('wp_enqueue_scripts', 'parcel_moving_enqueue_scripts');
 
 // Handle form submission
 add_action('wp_ajax_nopriv_parcel_moving_form_submit', 'parcel_moving_form_submit');
 add_action('wp_ajax_parcel_moving_form_submit', 'parcel_moving_form_submit');
 
 function parcel_moving_form_submit() {
+    // Check nonce for security
+    if (!isset($_POST['parcel_moving_nonce']) || !wp_verify_nonce($_POST['parcel_moving_nonce'], 'parcel_moving_nonce_action')) {
+        wp_send_json_error('Invalid nonce.');
+    }
+
+    // Check if it is a POST request
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Sanitize form inputs
         $from_location = sanitize_text_field($_POST['from_location']);
         $to_location = sanitize_text_field($_POST['to_location']);
         $date = sanitize_text_field($_POST['date']);
@@ -88,11 +75,98 @@ function parcel_moving_form_submit() {
         $email = sanitize_email($_POST['email']);
         $extra_data = sanitize_textarea_field($_POST['extra_data']);
 
-        // Process form data (e.g., send an email or save to database)
-        wp_send_json_success('Form submitted successfully');
-    } else {
-        wp_send_json_error('Invalid request');
-    }
+        // Log sanitized input for debugging
+        error_log(print_r($_POST, true));
 
+        // Insert into the database
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'parcel_moving_data';
+
+        // Insert the data
+        $result = $wpdb->insert($table_name, array(
+            'from_location' => $from_location,
+            'to_location' => $to_location,
+            'date' => $date,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $email,
+            'extra_data' => $extra_data
+        ));
+
+        // Check for errors
+        if ($result === false) {
+            error_log('Database error: ' . $wpdb->last_error);
+            wp_send_json_error('Error saving data to the database.');
+        } else {
+            wp_send_json_success('Form submitted successfully and data saved.');
+        }
+    } else {
+        wp_send_json_error('Invalid request method.');
+    }
     wp_die();
+}
+
+// Shortcode function to display the parcel moving form
+function parcel_moving_form_shortcode() {
+    ob_start(); // Start output buffering to return form HTML
+    ?>
+    <form id="parcel-moving-form">
+        <?php wp_nonce_field('parcel_moving_nonce_action', 'parcel_moving_nonce'); ?>
+        <label>From Location: <input type="text" id="from_location" name="from_location" value="Default From Location" required></label><br>
+    <label>To Location: <input type="text" id="to_location" name="to_location" value="Default To Location" required></label><br>
+    <label>Date: <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label><br>
+    <label>First Name: <input type="text" id="first_name" name="first_name" value="Default First Name" required></label><br>
+    <label>Last Name: <input type="text" id="last_name" name="last_name" value="Default Last Name" required></label><br>
+    <label>Email: <input type="email" id="email" name="email" value="default@example.com" required></label><br>
+    <label>Extra Data: <textarea id="extra_data" name="extra_data">Default extra data...</textarea></label><br>
+    <input type="submit" value="Submit">
+    </form>
+    <?php
+    return ob_get_clean(); // Return the form HTML
+}
+add_shortcode('parcel_moving_form', 'parcel_moving_form_shortcode');
+
+// Add admin menu page to view form submissions
+function parcel_moving_add_admin_menu() {
+    add_menu_page(
+        'Parcel Moving Submissions',
+        'Parcel Submissions',
+        'manage_options',
+        'parcel-moving-submissions',
+        'parcel_moving_display_submissions',
+        'dashicons-list-view',
+        20
+    );
+}
+add_action('admin_menu', 'parcel_moving_add_admin_menu');
+
+// Display the form submissions in the admin area
+function parcel_moving_display_submissions() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'parcel_moving_data';
+    $results = $wpdb->get_results("SELECT * FROM $table_name");
+
+    echo '<div class="wrap"><h1>Parcel Moving Submissions</h1>';
+    if ($results) {
+        echo '<table class="widefat fixed" cellspacing="0">';
+        echo '<thead><tr><th>ID</th><th>From</th><th>To</th><th>Date</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Extra Data</th><th>Time</th></tr></thead>';
+        echo '<tbody>';
+        foreach ($results as $row) {
+            echo '<tr>';
+            echo '<td>' . esc_html($row->id) . '</td>';
+            echo '<td>' . esc_html($row->from_location) . '</td>';
+            echo '<td>' . esc_html($row->to_location) . '</td>';
+            echo '<td>' . esc_html($row->date) . '</td>';
+            echo '<td>' . esc_html($row->first_name) . '</td>';
+            echo '<td>' . esc_html($row->last_name) . '</td>';
+            echo '<td>' . esc_html($row->email) . '</td>';
+            echo '<td>' . esc_html($row->extra_data) . '</td>';
+            echo '<td>' . esc_html($row->time) . '</td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table>';
+    } else {
+        echo '<p>No submissions found.</p>';
+    }
+    echo '</div>';
 }
