@@ -32,34 +32,22 @@ register_activation_hook(__FILE__, 'parcel_moving_create_table');
 
 // Enqueue JavaScript for AJAX submission
 function parcel_moving_enqueue_scripts() {
-    // Enqueue the JavaScript file
+    wp_enqueue_script('jquery'); // Ensure jQuery is loaded
     wp_enqueue_script(
-        'parcel-moving-script', // Handle for the script
-        plugins_url('parcel-moving.js', __FILE__), // Path to the JavaScript file
-        array('jquery'), // Dependencies (jQuery)
-        '1.0', // Version
-        true // Load in the footer
+        'parcel-moving-script',
+        plugins_url('parcel-moving.js', __FILE__),
+        array('jquery'),
+        '1.0',
+        true
     );
 
-    // Localize the script to pass the AJAX URL and nonce from PHP to JavaScript
-    wp_localize_script(
-        'parcel-moving-script', // Handle of the script
-        'ajax_object', // Name of the JS object
-        array(
-            'ajax_url' => admin_url('admin-ajax.php'), // Data we want to pass
-            'nonce' => wp_create_nonce('parcel_moving_nonce_action') // Create nonce for security
-        )
-    );
+    wp_localize_script('parcel-moving-script', 'ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('parcel_moving_nonce_action')
+    ));
 }
-
 add_action('wp_enqueue_scripts', 'parcel_moving_enqueue_scripts');
 
-
-
-
-
-
-// Handle form submission ----------------------------------------------------------------
 // Handle form submission
 add_action('wp_ajax_nopriv_parcel_moving_form_submit', 'parcel_moving_form_submit');
 add_action('wp_ajax_parcel_moving_form_submit', 'parcel_moving_form_submit');
@@ -81,9 +69,6 @@ function parcel_moving_form_submit() {
         $email = sanitize_email($_POST['email']);
         $extra_data = sanitize_textarea_field($_POST['extra_data']);
 
-        // Log sanitized input for debugging (optional)
-        error_log(print_r($_POST, true));
-
         // Insert into the database
         global $wpdb;
         $table_name = $wpdb->prefix . 'parcel_moving_data';
@@ -101,7 +86,6 @@ function parcel_moving_form_submit() {
 
         // Check for errors
         if ($result === false) {
-            error_log('Database error: ' . $wpdb->last_error);
             wp_send_json_error('Error saving data to the database.');
         } else {
             wp_send_json_success('Form submitted successfully and data saved.');
@@ -112,20 +96,7 @@ function parcel_moving_form_submit() {
     wp_die(); // This is required to properly terminate AJAX requests in WordPress
 }
 
-// Enqueue script and localize variables
-add_action('wp_enqueue_scripts', function() {
-// Enqueue jQuery and your custom script
-add_action('wp_enqueue_scripts', function() {
-    wp_enqueue_script('jquery'); // Ensure jQuery is loaded
-    wp_enqueue_script('parcel-moving-script', get_template_directory_uri() . '/path-to-your-js-file/parcel-moving.js', array('jquery'), null, true);
-    wp_localize_script('parcel-moving-script', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
-});
-
-});
-
-
-
-
+// Shortcode to display the form
 function parcel_moving_form_shortcode() {
     ob_start(); // Start output buffering to return form HTML
     ?>
@@ -136,30 +107,25 @@ function parcel_moving_form_shortcode() {
         <label>Date: <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label><br>
         <button type="button" id="goto-button">Go to Additional Data</button> <!-- Button to open modal -->
 
-            <!-- Modal for Extra Data -->
-    <div id="extra-data-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
-        <div style="background: white; margin: auto; padding: 20px; width: 300px; position: relative; top: 50%; transform: translateY(-50%);">
-            <h2>Additional Data</h2>
-            <label>First Name: <input type="text" id="first_name" name="first_name" required></label><br>
-            <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
-            <label>Email: <input type="email" id="email" name="email" required></label><br>
-            <label>Extra Data: <textarea id="extra_data" name="extra_data" required></textarea><br></label>
-            <button id="submit-extra-data" type="submit">Submit</button>
-            <button id="cancel-modal">Cancel</button>
+        <!-- Modal for Extra Data -->
+        <div id="extra-data-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
+            <div style="background: white; margin: auto; padding: 20px; width: 300px; position: relative; top: 50%; transform: translateY(-50%);">
+                <h2>Additional Data</h2>
+                <label>First Name: <input type="text" id="first_name" name="first_name" required></label><br>
+                <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
+                <label>Email: <input type="email" id="email" name="email" required></label><br>
+                <label>Extra Data: <textarea id="extra_data" name="extra_data" required></textarea><br></label>
+                <button id="submit-extra-data" type="submit">Submit</button>
+                <button id="cancel-modal">Cancel</button>
+            </div>
         </div>
-    </div>
     </form>
-
-
     <?php
     return ob_get_clean(); // Return the form HTML
 }
 add_shortcode('parcel_moving_form', 'parcel_moving_form_shortcode');
 
-
-
-
-// Add admin menu page to view form submissions
+// Admin page to display form submissions
 function parcel_moving_add_admin_menu() {
     add_menu_page(
         'Parcel Moving Submissions',
@@ -173,7 +139,6 @@ function parcel_moving_add_admin_menu() {
 }
 add_action('admin_menu', 'parcel_moving_add_admin_menu');
 
-// Display the form submissions in the admin area
 function parcel_moving_display_submissions() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'parcel_moving_data';
@@ -203,3 +168,4 @@ function parcel_moving_display_submissions() {
     }
     echo '</div>';
 }
+
