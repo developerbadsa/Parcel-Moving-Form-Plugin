@@ -36,6 +36,7 @@ register_activation_hook(__FILE__, 'parcel_moving_create_table');
 function parcel_moving_enqueue_scripts()
 {
     wp_enqueue_script('jquery'); // Ensure jQuery is loaded
+
     wp_enqueue_script(
         'parcel-moving-script',
         plugins_url('parcel-moving.js', __FILE__),
@@ -43,6 +44,16 @@ function parcel_moving_enqueue_scripts()
         '1.0',
         true
     );
+
+    // Enqueue the auto-fill-field.js script
+    wp_enqueue_script(
+        'parcel-moving-auto-fill', // Handle for the script
+        plugins_url('js/auto-fill-field.js', __FILE__), // Path to your auto-fill script
+        array(), // No dependencies
+        '1.0', // Version
+        true // Load in the footer
+    );
+
 
     // Enqueue the CSS file
     wp_enqueue_style(
@@ -166,8 +177,14 @@ function parcel_moving_form_shortcode()
     <form id="parcel-moving-form">
         <?php wp_nonce_field('parcel_moving_nonce_action', 'parcel_moving_nonce'); ?>
         <div class="parcel-moving-form-inputs">
-            <label><input type="text" id="from_location" placeholder="From Location" name="from_location" required></label>
-            <label> <input type="text" id="to_location" placeholder="To Location" name="to_location" required></label>
+            <label>
+                <input type="text" id="from_location" placeholder="From Location" name="from_location" required>
+                <ul id="from_location_suggestions" class="suggestions-list"></ul>
+            </label>
+            <label>
+                <input type="text" id="to_location" placeholder="To Location" name="to_location" required>
+                <ul id="to_location_suggestions" class="suggestions-list"></ul>
+            </label>
             <label><input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label>
             <button type="button" id="goto-button">Go to Additional Data</button>
         </div>
