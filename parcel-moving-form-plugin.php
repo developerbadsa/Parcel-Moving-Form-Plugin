@@ -7,7 +7,8 @@
  */
 
 // Create the database table on plugin activation
-function parcel_moving_create_table() {
+function parcel_moving_create_table()
+{
     global $wpdb;
     $table_name = $wpdb->prefix . 'parcel_moving_data';
     $charset_collate = $wpdb->get_charset_collate();
@@ -32,7 +33,8 @@ register_activation_hook(__FILE__, 'parcel_moving_create_table');
 
 
 // Enqueue JavaScript for AJAX submission
-function parcel_moving_enqueue_scripts() {
+function parcel_moving_enqueue_scripts()
+{
     wp_enqueue_script('jquery'); // Ensure jQuery is loaded
     wp_enqueue_script(
         'parcel-moving-script',
@@ -58,7 +60,8 @@ add_action('wp_ajax_parcel_moving_form_submit', 'parcel_moving_form_submit');
 
 
 
-function parcel_moving_form_submit() {
+function parcel_moving_form_submit()
+{
     // Check nonce for security
     if (!isset($_POST['parcel_moving_nonce']) || !wp_verify_nonce($_POST['parcel_moving_nonce'], 'parcel_moving_nonce_action')) {
         wp_send_json_error('Invalid nonce.');
@@ -123,25 +126,25 @@ function parcel_moving_form_submit() {
             $message_admin .= "Extra Data: $extra_data\n\n";
             $message_admin .= "Please log in to the admin panel to view more details.";
 
-            
-// Send the email to the user
-$user_email_sent = wp_mail($email, $subject_user, $message_user, $headers);
-if (!$user_email_sent) {
-    error_log('Email to user failed to send.');
-}
 
-// Send the email to the admin
-$admin_email_sent = wp_mail($admin_email, $subject_admin, $message_admin, $headers);
-if (!$admin_email_sent) {
-    error_log('Email to admin failed to send.');
-}
+            // Send the email to the user
+            $user_email_sent = wp_mail($email, $subject_user, $message_user, $headers);
+            if (!$user_email_sent) {
+                error_log('Email to user failed to send.');
+            }
 
-// Check if both emails were sent successfully
-if ($user_email_sent && $admin_email_sent) {
-    wp_send_json_success('Form submitted successfully, and an email has been sent to both the user and the admin.');
-} else {
-    wp_send_json_error('Form submitted successfully, but there was an issue sending the email(s).');
-}
+            // Send the email to the admin
+            $admin_email_sent = wp_mail($admin_email, $subject_admin, $message_admin, $headers);
+            if (!$admin_email_sent) {
+                error_log('Email to admin failed to send.');
+            }
+
+            // Check if both emails were sent successfully
+            if ($user_email_sent && $admin_email_sent) {
+                wp_send_json_success('Form submitted successfully, and an email has been sent to both the user and the admin.');
+            } else {
+                wp_send_json_error('Form submitted successfully, but there was an issue sending the email(s).');
+            }
 
 
 
@@ -156,19 +159,24 @@ if ($user_email_sent && $admin_email_sent) {
 
 
 // Shortcode to display the form
-function parcel_moving_form_shortcode() {
+function parcel_moving_form_shortcode()
+{
     ob_start(); // Start output buffering to return form HTML
     ?>
     <form id="parcel-moving-form">
         <?php wp_nonce_field('parcel_moving_nonce_action', 'parcel_moving_nonce'); ?>
-        <label>From Location: <input type="text" id="from_location" name="from_location" required></label><br>
-        <label>To Location: <input type="text" id="to_location" name="to_location" required></label><br>
-        <label>Date: <input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label><br>
-        <button type="button" id="goto-button">Go to Additional Data</button> <!-- Button to open modal -->
+        <div class="parcel-moving-form-inputs">
+            <label><input type="text" id="from_location" placeholder="From Location" name="from_location" required></label>
+            <label> <input type="text" id="to_location" placeholder="To Location" name="to_location" required></label>
+            <label><input type="date" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required></label>
+            <button type="button" id="goto-button">Go to Additional Data</button>
+        </div>
 
         <!-- Modal for Extra Data -->
-        <div id="extra-data-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
-            <div style="background: white; margin: auto; padding: 20px; width: 300px; position: relative; top: 50%; transform: translateY(-50%);">
+        <div id="extra-data-modal"
+            style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
+            <div
+                style="background: white; margin: auto; padding: 20px; width: 300px; position: relative; top: 50%; transform: translateY(-50%);">
                 <h2>Additional Data</h2>
                 <label>First Name: <input type="text" id="first_name" name="first_name" required></label><br>
                 <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
@@ -185,7 +193,8 @@ function parcel_moving_form_shortcode() {
 add_shortcode('parcel_moving_form', 'parcel_moving_form_shortcode');
 
 // Admin page to display form submissions
-function parcel_moving_add_admin_menu() {
+function parcel_moving_add_admin_menu()
+{
     add_menu_page(
         'Parcel Moving Submissions',
         'Parcel Submissions',
@@ -198,7 +207,8 @@ function parcel_moving_add_admin_menu() {
 }
 add_action('admin_menu', 'parcel_moving_add_admin_menu');
 
-function parcel_moving_display_submissions() {
+function parcel_moving_display_submissions()
+{
     global $wpdb;
     $table_name = $wpdb->prefix . 'parcel_moving_data';
     $results = $wpdb->get_results("SELECT * FROM $table_name");
