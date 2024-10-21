@@ -8,7 +8,6 @@
       rgb(255 255 255 / 24%) 68%
    );
    background-repeat: no-repeat;
-   border: 1px solid;
    border-radius: 10px;
    justify-content: center;
    align-items: center;
@@ -26,7 +25,9 @@
   padding: 12px 7px;
   font-size: 16px;
 }
-
+.parcel-moving-form-inputs input:active{
+  border: 1px #a0a0a0 solid;
+}
 button#goto-button {
    background: #ff5620;
    border: none;
