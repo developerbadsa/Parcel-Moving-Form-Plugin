@@ -68,6 +68,7 @@ button#goto-button {
   overflow-y: auto;
   display: none;
   width: 225px;
+  border-radius: 10px;
 }
 
 .suggestions-list li {

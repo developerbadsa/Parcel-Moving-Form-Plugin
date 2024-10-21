@@ -45,6 +45,14 @@ function parcel_moving_enqueue_scripts()
         true
     );
 
+    wp_enqueue_script('parcel-moving-script', plugin_dir_url(__FILE__) . 'parcel-moving.js', array('jquery'), '1.0', true);
+    
+
+    // Localize script to make ajax_object available in JS
+    wp_localize_script('parcel-moving-script', 'ajax_object', array(
+        'ajax_url' => admin_url('admin-ajax.php'), // The URL for AJAX requests
+    ));
+
     // Enqueue the auto-fill-field.js script
     wp_enqueue_script(
         'parcel-moving-auto-fill', // Handle for the script
@@ -214,7 +222,8 @@ function parcel_moving_form_shortcode()
             <!-- Date -->
             <div>
                 <label class="parcel-moving-form-input">
-                    <input type="date" style="font-size:18px" id="date" name="date" value="<?php echo date('Y-m-d'); ?>" required>
+                    <input type="date" style="font-size:18px" id="date" name="date" value="<?php echo date('Y-m-d'); ?>"
+                        required>
                     <span>
                         <!-- <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -229,7 +238,7 @@ function parcel_moving_form_shortcode()
                 </label>
                 <ul id="to_location_suggestions" class="suggestions-list"></ul>
             </div>
-            <button type="button" id="goto-button">Go to Additional Data</button>
+            <button type="button" id="goto-button">Get a Free Qoute</button>
         </div>
 
         <!-- Modal for Extra Data -->
@@ -237,6 +246,8 @@ function parcel_moving_form_shortcode()
             style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
             <div
                 style="background: white; margin: auto; padding: 20px; width: 300px; position: relative; top: 50%; transform: translateY(-50%);">
+                <button id="close-modal-button"
+                    style="position: absolute; top: 10px; right: 10px; border: none; background: none; font-size: 18px; cursor: pointer;">&times;</button>
                 <h2>Additional Data</h2>
                 <label>First Name: <input type="text" id="first_name" name="first_name" required></label><br>
                 <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
@@ -246,6 +257,7 @@ function parcel_moving_form_shortcode()
                 <button id="cancel-modal">Cancel</button>
             </div>
         </div>
+
     </form>
     <?php
     return ob_get_clean(); // Return the form HTML
