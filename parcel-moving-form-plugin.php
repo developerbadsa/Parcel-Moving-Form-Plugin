@@ -30,6 +30,7 @@ function parcel_moving_create_table() {
 }
 register_activation_hook(__FILE__, 'parcel_moving_create_table');
 
+
 // Enqueue JavaScript for AJAX submission
 function parcel_moving_enqueue_scripts() {
     wp_enqueue_script('jquery'); // Ensure jQuery is loaded
@@ -41,10 +42,13 @@ function parcel_moving_enqueue_scripts() {
         true
     );
 
-    wp_localize_script('parcel-moving-script', 'ajax_object', array(
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('parcel_moving_nonce_action')
-    ));
+    // Enqueue the CSS file
+    wp_enqueue_style(
+        'parcel-moving-style', // Handle for the style
+        plugins_url('style.css', __FILE__), // Path to the CSS file
+        array(), // Dependencies (optional)
+        '1.0' // Version
+    );
 }
 add_action('wp_enqueue_scripts', 'parcel_moving_enqueue_scripts');
 
