@@ -1,7 +1,6 @@
 .parcel-moving-form-inputs {
    display: grid;
    grid-template-columns: 1fr 1fr 1fr 1fr;
-   padding: 20px 10px;
    background-image: linear-gradient(
       142deg,
       rgba(255, 255, 255, 1) 38%,
@@ -12,7 +11,7 @@
    justify-content: center;
    align-items: center;
    gap: 10px;
-   padding: 18px 25px 18px;
+   padding: 30px 25px 30px;
    position: relative;
    backdrop-filter: blur(6px);
    background-color: rgba(255, 255, 255, 0.3);
@@ -22,11 +21,29 @@
   height: 38px;
   border-radius: 5px;
   border: 1px #a0a0a0 solid;
-  padding: 12px 7px;
+  padding: 20px 15px;
   font-size: 16px;
 }
 .parcel-moving-form-inputs input:active{
   border: 1px #a0a0a0 solid;
+}
+
+
+label.parcel-moving-form-input {
+  display: flex;
+  align-items:center;
+}
+
+label.parcel-moving-form-input svg {
+  width: 25px !important;
+  height:auto;
+  fill:gray;
+}
+
+label.parcel-moving-form-input span {
+  position:relative;
+  display:flex;
+  left:-30px
 }
 button#goto-button {
    background: #ff5620;
@@ -50,6 +67,7 @@ button#goto-button {
   max-height: 150px;
   overflow-y: auto;
   display: none;
+  width: 225px;
 }
 
 .suggestions-list li {
@@ -61,3 +79,5 @@ button#goto-button {
 .suggestions-list li:hover {
   background-color: #f0f0f0;
 }
+
+/*  */

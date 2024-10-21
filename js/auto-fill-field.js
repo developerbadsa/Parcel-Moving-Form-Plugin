@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             suggestionsBox.appendChild(suggestionItem);
          });
-         suggestionsBox.style.display = 'block'; // Show suggestions
+         suggestionsBox.style.display = 'inline'; // Show suggestions
       } else {
          suggestionsBox.style.display = 'none'; // Hide if no suggestions
       }
