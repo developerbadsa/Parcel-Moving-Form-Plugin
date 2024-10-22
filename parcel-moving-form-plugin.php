@@ -18,10 +18,10 @@ function parcel_moving_create_table()
         from_location varchar(255) NOT NULL,
         to_location varchar(255) NOT NULL,
         date date NOT NULL,
-        first_name varchar(255) NOT NULL,
-        last_name varchar(255) NOT NULL,
+        full_name varchar(255) NOT NULL,
+        phone varchar(255) NOT NULL,
         email varchar(255) NOT NULL,
-        extra_data text,
+        area text,
         time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
         PRIMARY KEY  (id)
     ) $charset_collate;";
@@ -92,7 +92,7 @@ function parcel_moving_form_submit()
         $from_location = sanitize_text_field($_POST['from_location']);
         $to_location = sanitize_text_field($_POST['to_location']);
         $date = sanitize_text_field($_POST['date']);
-        $first_name = sanitize_text_field($_POST['first_name']);
+        $full_name = sanitize_text_field($_POST['full_name']);
         $last_name = sanitize_text_field($_POST['last_name']);
         $email = sanitize_email($_POST['email']);
         $extra_data = sanitize_textarea_field($_POST['extra_data']);
@@ -106,7 +106,7 @@ function parcel_moving_form_submit()
             'from_location' => $from_location,
             'to_location' => $to_location,
             'date' => $date,
-            'first_name' => $first_name,
+            'full_name' => $full_name,
             'last_name' => $last_name,
             'email' => $email,
             'extra_data' => $extra_data
@@ -119,7 +119,7 @@ function parcel_moving_form_submit()
 
             // Send Email to User
             $subject_user = 'Your Parcel Moving Request';
-            $message_user = "Hello $first_name $last_name,\n\n";
+            $message_user = "Hello $full_name $last_name,\n\n";
             $message_user .= "Thank you for submitting your parcel moving request. Here are the details of your submission:\n\n";
             $message_user .= "From: $from_location\n";
             $message_user .= "To: $to_location\n";
@@ -139,7 +139,7 @@ function parcel_moving_form_submit()
             $message_admin .= "From: $from_location\n";
             $message_admin .= "To: $to_location\n";
             $message_admin .= "Date: $date\n";
-            $message_admin .= "First Name: $first_name\n";
+            $message_admin .= "First Name: $full_name\n";
             $message_admin .= "Last Name: $last_name\n";
             $message_admin .= "Email: $email\n";
             $message_admin .= "Extra Data: $extra_data\n\n";
@@ -463,14 +463,43 @@ function parcel_moving_form_shortcode()
 
                 <!-- Input Fields -->
                 <div class="parcel-moving-form-popup-fields">
-                    <label>First Name: <input type="text" id="first_name" name="first_name" required></label><br>
-                    <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
-                    <label>Email: <input type="email" id="email" name="email" required></label><br>
-                    <label>Extra Data: <textarea id="extra_data" name="extra_data" required></textarea><br></label>
+                    <label> <input placeholder="Full Name" type="text" id="full_name" name="full_name" required></label>
+                    <label> <input placeholder="Email" type="email" id="email" name="email" required></label>
+                    <label> <input placeholder="Mobile Number" type="text" id="last_name" name="last_name" required></label>
+                    <label> <textarea placeholder="Area" id="extra_data" name="extra_data" required></textarea></label>
                 </div>
 
 
-                <button id="submit-extra-data" type="submit">Submit</button>
+                <!-- Checkboxs with agreements -->
+                <div class="parcel-moving-form-popup-checkboxs">
+                    <div class="parcel-moving-form-popup-checkbox-item">
+                        <input type="checkbox" name="" id="">
+                        <span>
+                            I agree to the privacy policy, cancellation policy and general terms and conditions. By
+                            agreeing, you allow us to also provide you with our offer by telephone.
+                        </span>
+                    </div>
+                    <div class="parcel-moving-form-popup-checkbox-item">
+                        <input type="checkbox" name="" id="">
+                        <span>
+                            I agree to receive offers for advertising purposes from Movinga or selected Movinga partners.
+                            For this purpose, Movinga may use my data and, if necessary, pass it on to selected Movinga
+                            partners.
+                        </span>
+                    </div>
+                </div>
+
+
+                <!-- Input Fields -->
+                <!-- <div class="parcel-moving-form-popup-fields">
+                    <label>First Name: <input type="text" id="full_name" name="full_name" required></label><br>
+                    <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
+                    <label>Email: <input type="email" id="email" name="email" required></label><br>
+                    <label>Extra Data: <textarea id="extra_data" name="extra_data" required></textarea><br></label>
+                </div> -->
+
+
+                <button id="submit-extra-data" type="submit">Get a free quote</button>
             </div>
         </div>
 
@@ -512,7 +541,7 @@ function parcel_moving_display_submissions()
             echo '<td>' . esc_html($row->from_location) . '</td>';
             echo '<td>' . esc_html($row->to_location) . '</td>';
             echo '<td>' . esc_html($row->date) . '</td>';
-            echo '<td>' . esc_html($row->first_name) . '</td>';
+            echo '<td>' . esc_html($row->full_name) . '</td>';
             echo '<td>' . esc_html($row->last_name) . '</td>';
             echo '<td>' . esc_html($row->email) . '</td>';
             echo '<td>' . esc_html($row->extra_data) . '</td>';
@@ -525,4 +554,13 @@ function parcel_moving_display_submissions()
     }
     echo '</div>';
 }
+
+
+
+
+
+
+
+
+
 

@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
          from_location: $('#from_location').val(),
          to_location: $('#to_location').val(),
          date: $('#date').val(),
-         first_name: $('#first_name').val(),
+         full_name: $('#full_name').val(),
          last_name: $('#last_name').val(),
          email: $('#email').val(),
          extra_data: $('#extra_data').val(),

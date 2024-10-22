@@ -18,32 +18,31 @@
    -webkit-backdrop-filter: blur(6px);
 }
 .parcel-moving-form-inputs input {
-  height: 38px;
-  border-radius: 5px;
-  border: 1px #a0a0a0 solid;
-  padding: 20px 15px;
-  font-size: 16px;
+   height: 38px;
+   border-radius: 5px;
+   border: 1px #a0a0a0 solid;
+   padding: 20px 15px;
+   font-size: 16px;
 }
-.parcel-moving-form-inputs input:active{
-  border: 1px #a0a0a0 solid;
+.parcel-moving-form-inputs input:active {
+   border: 1px #a0a0a0 solid;
 }
-
 
 label.parcel-moving-form-input {
-  display: flex;
-  align-items:center;
+   display: flex;
+   align-items: center;
 }
 
 label.parcel-moving-form-input svg {
-  width: 25px !important;
-  height:auto;
-  fill:gray;
+   width: 25px !important;
+   height: auto;
+   fill: gray;
 }
 
 label.parcel-moving-form-input span {
-  position:relative;
-  display:flex;
-  left:-30px
+   position: relative;
+   display: flex;
+   left: -30px;
 }
 button#goto-button {
    background: #ff5620;
@@ -53,53 +52,120 @@ button#goto-button {
    border-radius: 5px;
    font-size: 16px;
    font-weight: 700;
+   cursor: pointer;
 }
 /* css for suggesion */
 .suggestions-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 1px solid #a0a0a0;
-  background-color: #fff;
-  position: absolute;
-  z-index: 999;
-  width: 100%;
-  max-height: 150px;
-  overflow-y: auto;
-  display: none;
-  width: 225px;
-  border-radius: 10px;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   border: 1px solid #a0a0a0;
+   background-color: #fff;
+   position: absolute;
+   z-index: 999;
+   width: 100%;
+   max-height: 150px;
+   overflow-y: auto;
+   display: none;
+   width: 225px;
+   border-radius: 10px;
 }
 
 .suggestions-list li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #e0e0e0;
+   padding: 10px;
+   cursor: pointer;
+   border-bottom: 1px solid #e0e0e0;
 }
 
 .suggestions-list li:hover {
-  background-color: #f0f0f0;
+   background-color: #f0f0f0;
 }
 
 /* form popup css */
-.parcel-moving-form-popup {padding: 16px 38px !important;}
+.parcel-moving-form-popup {
+   padding: 30px 38px !important;
+}
 
-.parcel-moving-form-popup-content {display: flex;flex-direction: column;justify-content: center;align-items: center;gap: 0px;}
+.parcel-moving-form-popup-content {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 0px;
+}
 
 h2.parcel-moving-form-popup-title {
-    padding: 0px 0px !important;
-    line-height: 75px;
-    font-size: 36px;
-    margin: 0;
+   padding: 0px 0px !important;
+   line-height: 75px;
+   font-size: 36px;
+   margin: 0;
 }
 
 .parcel-moving-form-popup-content p {
-    font-size: 16px;
-    padding: 0px;
-    margin: 0px;
+   font-size: 16px;
+   padding: 0px;
+   margin: 0px;
 }
 
 span.parcel-moving-form-popup-img svg {
-    width: 99%;
-    align-self: center;
+   width: 99%;
+   align-self: center;
+}
+
+.parcel-moving-form-popup-fields {
+   display: grid;
+   grid-template-columns: 1fr 1fr !important;
+   gap: 19px;
+   margin: 15px 0px;
+}
+
+.parcel-moving-form-popup-fields label input {
+   height: 38px !important;
+   padding: 12px 15px;
+   font-size: 16px;
+   border: 1px solid #adafb2 !important;
+   border-radius: 5px;
+}
+.parcel-moving-form-popup-fields label textarea {
+   height: 38px !important;
+   padding: 12px 15px;
+   font-size: 16px;
+   border: 1px solid #adafb2 !important;
+   border-radius: 5px;
+}
+
+.parcel-moving-form-popup-checkboxs {
+   margin: 12px 0;
+   display: flex;
+   flex-direction: column;
+   gap: 16px;
+}
+
+.parcel-moving-form-popup-checkboxs div {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   gap: 5px;
+}
+
+button#submit-extra-data {
+   padding: 14px 22px;
+   font-size: 18px;
+   border-radius: 5px;
+   background: #ff5c00;
+   border: none;
+   color: white;
+   font-weight: 600;
+   cursor: pointer;
+}
+
+button#submit-extra-data {
+   text-align: center;
+}
+
+.parcel-moving-form-popup {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
 }
