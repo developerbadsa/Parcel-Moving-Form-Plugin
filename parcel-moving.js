@@ -13,7 +13,19 @@ jQuery(document).ready(function ($) {
 
    // Handle the form submission
    $('#parcel-moving-form').on('submit', function (event) {
+
       event.preventDefault(); // Prevent default form submission
+
+      // Check if both checkboxes are checked
+      // if (!$('#checkbox1').is(':checked') || !$('#checkbox2').is(':checked')) {
+      //    alert('You must agree to the terms and conditions to proceed.');
+      //    return; // Stop the form submission
+      // }
+
+         // if (!checkbox1.is(':checked') || !checkbox2.is(':checked')) {
+         //    alert('You must agree to the terms and conditions to proceed.');
+         //    return; // Stop the form submission
+         // }
 
       // Collect data from the form
       const finalData = {

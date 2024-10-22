@@ -465,7 +465,7 @@ function parcel_moving_form_shortcode()
                 <div class="parcel-moving-form-popup-fields">
                     <label> <input placeholder="Full Name" type="text" id="full_name" name="full_name" required></label>
                     <label> <input placeholder="Email" type="email" id="email" name="email" required></label>
-                    <label> <input placeholder="Mobile Number" type="text" id="last_name" name="last_name" required></label>
+                    <label> <input placeholder="Mobile Number" type="phone" id="last_name" name="last_name" required></label>
                     <label> <textarea placeholder="Area" id="extra_data" name="extra_data" required></textarea></label>
                 </div>
 
@@ -473,14 +473,14 @@ function parcel_moving_form_shortcode()
                 <!-- Checkboxs with agreements -->
                 <div class="parcel-moving-form-popup-checkboxs">
                     <div class="parcel-moving-form-popup-checkbox-item">
-                        <input type="checkbox" name="" id="">
+                        <input type="checkbox" name="" id="checkbox1" required>
                         <span>
                             I agree to the privacy policy, cancellation policy and general terms and conditions. By
                             agreeing, you allow us to also provide you with our offer by telephone.
                         </span>
                     </div>
                     <div class="parcel-moving-form-popup-checkbox-item">
-                        <input type="checkbox" name="" id="">
+                        <input type="checkbox" name="" id="checkbox1" required>
                         <span>
                             I agree to receive offers for advertising purposes from Movinga or selected Movinga partners.
                             For this purpose, Movinga may use my data and, if necessary, pass it on to selected Movinga
@@ -533,7 +533,7 @@ function parcel_moving_display_submissions()
     echo '<div class="wrap"><h1>Parcel Moving Submissions</h1>';
     if ($results) {
         echo '<table class="widefat fixed" cellspacing="0">';
-        echo '<thead><tr><th>ID</th><th>From</th><th>To</th><th>Date</th><th>First Name</th><th>Last Name</th><th>Email</th><th>Extra Data</th><th>Time</th></tr></thead>';
+        echo '<thead><tr><th>ID</th><th>From</th><th>To</th><th>Date</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Area</th><th>Time</th></tr></thead>';
         echo '<tbody>';
         foreach ($results as $row) {
             echo '<tr>';
