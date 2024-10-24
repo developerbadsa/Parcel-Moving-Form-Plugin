@@ -10,8 +10,11 @@
 function parcel_moving_create_table() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'parcel_moving_data1';
+    $parcel_locations_table = $wpdb->prefix . 'parcel_locations';
     $charset_collate = $wpdb->get_charset_collate();
 
+
+// SQL statement for creating the locations table
     $sql = "CREATE TABLE $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         from_location varchar(255) NOT NULL,
@@ -25,10 +28,19 @@ function parcel_moving_create_table() {
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
+    // SQL statement for creating the locations table
+    $sql2 = "CREATE TABLE $parcel_locations_table (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        location varchar(255) NOT NULL,
+        detail text NOT NULL,
+        PRIMARY KEY  (id)
+    );";
+
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
     // Execute the query
     dbDelta($sql);
+    dbDelta($sql2);
 
     // Log any errors from dbDelta
     if ($wpdb->last_error) {
@@ -59,6 +71,9 @@ function parcel_moving_enqueue_scripts()
         'ajax_url' => admin_url('admin-ajax.php'), // The URL for AJAX requests
     ));
 
+
+
+
     // Enqueue the auto-fill-field.js script
     wp_enqueue_script(
         'parcel-moving-auto-fill', // Handle for the script
@@ -67,6 +82,16 @@ function parcel_moving_enqueue_scripts()
         '1.0', // Version
         true // Load in the footer
     );
+
+
+    // Localize script to pass data from PHP to JavaScript
+    wp_localize_script('auto-fill-field', 'parcelMovingData', array(
+        'ajax_url' => admin_url('admin-ajax.php') // This is the URL for AJAX requests
+    ));
+
+
+
+
 
 
     // Enqueue the CSS file
@@ -101,9 +126,9 @@ function parcel_moving_form_submit()
         $to_location = sanitize_text_field($_POST['to_location']);
         $date = sanitize_text_field($_POST['date']);
         $full_name = sanitize_text_field($_POST['full_name']);
-        $last_name = sanitize_text_field($_POST['last_name']);
+        $phone = sanitize_text_field($_POST['phone']);
         $email = sanitize_email($_POST['email']);
-        $extra_data = sanitize_textarea_field($_POST['extra_data']);
+        $area = sanitize_textarea_field($_POST['area']);
 
         // Insert into the database
         global $wpdb;
@@ -115,9 +140,9 @@ function parcel_moving_form_submit()
             'to_location' => $to_location,
             'date' => $date,
             'full_name' => $full_name,
-            'phone' => $last_name,
+            'phone' => $phone,
             'email' => $email,
-            'area' => $extra_data
+            'area' => $area
         ));
 
         // Check for errors
@@ -127,12 +152,12 @@ function parcel_moving_form_submit()
 
             // Send Email to User
             $subject_user = 'Your Parcel Moving Request';
-            $message_user = "Hello $full_name $last_name,\n\n";
+            $message_user = "Hello $full_name,\n\n";
             $message_user .= "Thank you for submitting your parcel moving request. Here are the details of your submission:\n\n";
             $message_user .= "From: $from_location\n";
             $message_user .= "To: $to_location\n";
             $message_user .= "Date: $date\n";
-            $message_user .= "Extra Data: $extra_data\n\n";
+            $message_user .= "Area: $area\n\n";
             $message_user .= "We will contact you shortly regarding the next steps.\n\n";
             $message_user .= "Thank you,\nYour Parcel Moving Service Team";
             $headers = array('Content-Type: text/plain; charset=UTF-8');
@@ -147,10 +172,10 @@ function parcel_moving_form_submit()
             $message_admin .= "From: $from_location\n";
             $message_admin .= "To: $to_location\n";
             $message_admin .= "Date: $date\n";
-            $message_admin .= "First Name: $full_name\n";
-            $message_admin .= "Last Name: $last_name\n";
+            $message_admin .= "Full Name: $full_name\n";
+            $message_admin .= "Phone: $phone\n";
             $message_admin .= "Email: $email\n";
-            $message_admin .= "Extra Data: $extra_data\n\n";
+            $message_admin .= "Area: $area\n\n";
             $message_admin .= "Please log in to the admin panel to view more details.";
 
 
@@ -198,7 +223,7 @@ function parcel_moving_form_shortcode()
             <!-- From Location -->
             <div>
                 <label class="parcel-moving-form-input">
-                    <input type="text" id="from_location" placeholder="From Location" name="from_location" required>
+                    <input type="text" id="from_location" placeholder="From Location" autocomplete="off"  name="from_location" required>
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
                             version="1.1" id="Capa_1" width="800px" height="800px" viewBox="0 0 395.71 395.71"
@@ -215,7 +240,7 @@ function parcel_moving_form_shortcode()
             <!-- To Location -->
             <div>
                 <label class="parcel-moving-form-input">
-                    <input type="text" id="to_location" placeholder="To Location" name="to_location" required>
+                    <input type="text" id="to_location" placeholder="To Location" name="to_location" autocomplete="off"  required>
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
                             version="1.1" id="Capa_1" width="800px" height="800px" viewBox="0 0 395.71 395.71"
@@ -274,8 +299,8 @@ function parcel_moving_form_shortcode()
                 <div class="parcel-moving-form-popup-fields">
                     <label> <input placeholder="Full Name" type="text" id="full_name" name="full_name" required></label>
                     <label> <input placeholder="Email" type="email" id="email" name="email" required></label>
-                    <label> <input placeholder="Mobile Number" type="phone" id="last_name" name="last_name" required></label>
-                    <label> <textarea placeholder="Area" id="extra_data" name="extra_data" required></textarea></label>
+                    <label> <input placeholder="Mobile Number" type="phone" id="phone" name="phone" required></label>
+                    <label> <textarea placeholder="Area" id="extra_data" name="area" required></textarea></label>
                 </div>
 
 
