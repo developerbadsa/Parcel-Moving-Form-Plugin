@@ -7,10 +7,9 @@
  */
 
 // Create the database table on plugin activation
-function parcel_moving_create_table()
-{
+function parcel_moving_create_table() {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'parcel_moving_data';
+    $table_name = $wpdb->prefix . 'parcel_moving_data1';
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE $table_name (
@@ -27,8 +26,17 @@ function parcel_moving_create_table()
     ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+    // Execute the query
     dbDelta($sql);
+
+    // Log any errors from dbDelta
+    if ($wpdb->last_error) {
+        error_log('Database error: ' . $wpdb->last_error);
+    }
 }
+
+
 register_activation_hook(__FILE__, 'parcel_moving_create_table');
 
 
@@ -44,8 +52,6 @@ function parcel_moving_enqueue_scripts()
         '1.0',
         true
     );
-
-    wp_enqueue_script('parcel-moving-script', plugin_dir_url(__FILE__) . 'parcel-moving.js', array('jquery'), '1.0', true);
 
 
     // Localize script to make ajax_object available in JS
@@ -73,6 +79,8 @@ function parcel_moving_enqueue_scripts()
 }
 add_action('wp_enqueue_scripts', 'parcel_moving_enqueue_scripts');
 
+
+
 // Handle form submission
 add_action('wp_ajax_nopriv_parcel_moving_form_submit', 'parcel_moving_form_submit');
 add_action('wp_ajax_parcel_moving_form_submit', 'parcel_moving_form_submit');
@@ -99,7 +107,7 @@ function parcel_moving_form_submit()
 
         // Insert into the database
         global $wpdb;
-        $table_name = $wpdb->prefix . 'parcel_moving_data';
+        $table_name = $wpdb->prefix . 'parcel_moving_data1';
 
         // Insert the data
         $result = $wpdb->insert($table_name, array(
@@ -107,9 +115,9 @@ function parcel_moving_form_submit()
             'to_location' => $to_location,
             'date' => $date,
             'full_name' => $full_name,
-            'last_name' => $last_name,
+            'phone' => $last_name,
             'email' => $email,
-            'extra_data' => $extra_data
+            'area' => $extra_data
         ));
 
         // Check for errors
@@ -224,10 +232,10 @@ function parcel_moving_form_shortcode()
             <!-- Date -->
             <div>
                 <label class="parcel-moving-form-input">
-                    <input type="date" style="font-size:18px" id="date" name="date" value="<?php echo date('Y-m-d'); ?>"
+                    <input type="date" style="font-size:18px" id="date" name="date" 
                         required>
-                    <span>
-                        <!-- <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <span class="parcel-moving-form-input-date">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                             <g id="SVGRepo_iconCarrier">
@@ -235,7 +243,7 @@ function parcel_moving_form_shortcode()
                                     d="M3 9H21M7 3V5M17 3V5M6 12H10V16H6V12ZM6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z"
                                     stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                             </g>
-                        </svg> -->
+                        </svg>
                     </span>
                 </label>
                 <ul id="to_location_suggestions" class="suggestions-list"></ul>
@@ -249,7 +257,7 @@ function parcel_moving_form_shortcode()
 
             <!-- Main container of popup -->
             <div class="parcel-moving-form-popup"
-                style="background: white; margin: auto; padding: 20px; width: 700px; position: relative; top: 50%; transform: translateY(-50%);">
+                style="background: white; margin: auto; padding: 20px; position: relative; top: 50%; transform: translateY(-50%);">
                 <button id="close-modal-button"
                     style="position: absolute; top: 10px; right: 10px; border: none; background: none; font-size: 18px; cursor: pointer;">&times;</button>
 
@@ -259,206 +267,7 @@ function parcel_moving_form_shortcode()
                 <div class="parcel-moving-form-popup-content">
                     <h2 class="parcel-moving-form-popup-title">My move</h2>
                     <p>Request your free and non-binding offer here</p>
-                    <span class="parcel-moving-form-popup-img">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="773"
-                            height="101.569" viewBox="0 0 773 101.569">
-                            <defs>
-                                <style>
-                                    .a,
-                                    .d,
-                                    .e,
-                                    .g,
-                                    .h,
-                                    .i,
-                                    .k,
-                                    .l,
-                                    .m,
-                                    .n,
-                                    .o,
-                                    .p {
-                                        fill: none;
-                                    }
-
-                                    .b {
-                                        clip-path: url(#a);
-                                    }
-
-                                    .c {
-                                        fill: #ffb3a4;
-                                        fill-rule: evenodd;
-                                    }
-
-                                    .d,
-                                    .e,
-                                    .g,
-                                    .h,
-                                    .i,
-                                    .k,
-                                    .l,
-                                    .m,
-                                    .n,
-                                    .o {
-                                        stroke: #ff5722;
-                                        stroke-linejoin: round;
-                                    }
-
-                                    .d,
-                                    .e,
-                                    .g,
-                                    .h,
-                                    .i,
-                                    .k,
-                                    .l,
-                                    .m,
-                                    .n,
-                                    .o,
-                                    .p {
-                                        stroke-linecap: round;
-                                    }
-
-                                    .d {
-                                        stroke-width: 2px;
-                                    }
-
-                                    .e,
-                                    .p {
-                                        stroke-width: 3px;
-                                    }
-
-                                    .f {
-                                        clip-path: url(#b);
-                                    }
-
-                                    .g {
-                                        stroke-width: 2.219px;
-                                    }
-
-                                    .h {
-                                        stroke-width: 1.48px;
-                                    }
-
-                                    .i {
-                                        stroke-width: 1.48px;
-                                    }
-
-                                    .j {
-                                        clip-path: url(#c);
-                                    }
-
-                                    .k {
-                                        stroke-width: 2.219px;
-                                    }
-
-                                    .l {
-                                        stroke-width: 1.48px;
-                                    }
-
-                                    .m {
-                                        stroke-width: 1.48px;
-                                    }
-
-                                    .n {
-                                        stroke-width: 1.48px;
-                                    }
-
-                                    .o {
-                                        stroke-width: 1.48px;
-                                    }
-
-                                    .p {
-                                        stroke: #cecece;
-                                        stroke-dasharray: 254.667 10;
-                                    }
-                                </style>
-                                <clipPath id="a">
-                                    <rect class="a" width="84.357" height="99.069" />
-                                </clipPath>
-                                <clipPath id="b">
-                                    <rect class="a" width="105.203" height="56.286" />
-                                </clipPath>
-                                <clipPath id="c">
-                                    <path class="a" d="M3.31,4.3,2.2,38.628H29.426V4.3Z" transform="translate(-2.2 -4.3)" />
-                                </clipPath>
-                            </defs>
-                            <g transform="translate(-249.5 -226.931)">
-                                <g class="b" transform="translate(927.646 226.931)">
-                                    <path class="c"
-                                        d="M79.7,78.7V93.547c1.8,0,3.3-.825,3.3-1.875,0,1.05,1.5,1.875,3.3,1.875s3.3-.825,3.3-1.875c0,1.05,1.5,1.875,3.3,1.875V78.7Z"
-                                        transform="translate(-19.938 -19.688)" />
-                                    <path class="c"
-                                        d="M15.2,78.7V93.547c1.8,0,3.3-.825,3.3-1.875,0,1.05,1.5,1.875,3.3,1.875s3.3-.825,3.3-1.875c0,1.05,1.5,1.875,3.3,1.875V78.7Z"
-                                        transform="translate(-3.802 -19.688)" />
-                                    <path class="c" d="M15.2,40.2s6.6-13.722,6.6-22.5H15.2Z"
-                                        transform="translate(-3.802 -4.428)" />
-                                    <path class="c" d="M30.6,40.2S24,26.473,24,17.7h6.6Z"
-                                        transform="translate(-6.004 -4.428)" />
-                                    <path class="c" d="M47.5,40.2s6.6-13.722,6.6-22.5H47.5Z"
-                                        transform="translate(-11.883 -4.428)" />
-                                    <path class="c" d="M62.9,40.2s-6.6-13.722-6.6-22.5h6.6Z"
-                                        transform="translate(-14.084 -4.428)" />
-                                    <path class="c" d="M79.7,40.2s6.6-13.722,6.6-22.5H79.7Z"
-                                        transform="translate(-19.938 -4.428)" />
-                                    <path class="c" d="M95.1,40.2s-6.6-13.722-6.6-22.5h6.6Z"
-                                        transform="translate(-22.139 -4.428)" />
-                                    <rect class="d" width="13.197" height="22.488" transform="translate(11.398 13.272)" />
-                                    <rect class="d" width="13.197" height="22.488" transform="translate(59.762 13.272)" />
-                                    <rect class="d" width="13.197" height="22.488" transform="translate(11.398 58.862)" />
-                                    <rect class="d" width="13.197" height="22.488" transform="translate(59.762 58.862)" />
-                                    <rect class="d" width="13.197" height="22.488" transform="translate(35.617 13.272)" />
-                                    <path class="e" d="M83.607,1.5H1.5L3.75,6.149V98.3H81.358V6.149Z"
-                                        transform="translate(-0.375 -0.375)" />
-                                    <path class="c"
-                                        d="M64.12,82.148c0-5.7-5.249-10.348-11.772-10.348S40.5,76.449,40.5,82.148Z"
-                                        transform="translate(-10.132 -17.962)" />
-                                    <line class="d" x2="23.095" transform="translate(30.818 64.186)" />
-                                    <path class="d"
-                                        d="M52.347,71.8h0A11.772,11.772,0,0,0,40.5,83.572v20.1H64.12v-20.1A11.772,11.772,0,0,0,52.347,71.8Z"
-                                        transform="translate(-10.132 -17.962)" />
-                                    <line class="d" x1="14.847" y2="12.222" transform="translate(15.522 85.706)" />
-                                    <line class="d" x2="14.922" y2="12.222" transform="translate(53.988 85.706)" />
-                                    <rect class="d" width="13.122" height="21.325" transform="translate(35.617 64.186)" />
-                                    <line class="d" x1="77.608" transform="translate(3.374 47.315)" />
-                                    <line class="d" x1="77.608" transform="translate(3.374 5.774)" />
-                                </g>
-                                <g transform="translate(311.602 297.857)">
-                                    <g transform="translate(-52.602 -28.143)">
-                                        <g class="f">
-                                            <ellipse class="g" cx="7.324" cy="7.324" rx="7.324" ry="7.324"
-                                                transform="translate(11.837 40.543)" />
-                                            <path class="h"
-                                                d="M27.963,63.581A3.181,3.181,0,1,1,24.781,60.4,3.181,3.181,0,0,1,27.963,63.581Z"
-                                                transform="translate(-5.62 -15.714)" />
-                                            <ellipse class="g" cx="7.324" cy="7.324" rx="7.324" ry="7.324"
-                                                transform="translate(82.047 40.543)" />
-                                            <path class="i"
-                                                d="M122.863,63.581a3.181,3.181,0,1,1-3.181-3.181A3.181,3.181,0,0,1,122.863,63.581Z"
-                                                transform="translate(-30.31 -15.714)" />
-                                        </g>
-                                        <g class="j" transform="translate(1.628 3.181)">
-                                            <path class="c"
-                                                d="M14.649,24.423a6.363,6.363,0,1,1,6.363-6.363,6.363,6.363,0,0,1-6.363,6.363m0-20.123A14.276,14.276,0,0,0,.445,20.428c1.258,7.99,14.2,18.2,14.2,18.2,5.7-4.217,14.279-12.577,14.279-20.049A14.279,14.279,0,0,0,14.649,4.3"
-                                                transform="translate(-1.702 -4.3)" />
-                                        </g>
-                                        <g class="f">
-                                            <path class="k"
-                                                d="M12.227,47.813h-5.1A3.7,3.7,0,0,1,3.645,45.52L1.8,40.785a3.7,3.7,0,0,1-.3-1.48L2.758,5.051A3.7,3.7,0,0,1,6.457,1.5H65.865a3.7,3.7,0,0,1,2.589,1.11L89.539,23.547l.37.3,12.5,9.618a3.7,3.7,0,0,1,1.406,2.663l.592,7.768a3.7,3.7,0,0,1-3.7,4h-3.7"
-                                                transform="translate(-0.39 -0.39)" />
-                                            <line class="g" x1="55.635" transform="translate(26.412 47.423)" />
-                                            <path class="l"
-                                                d="M102.3,16.9h-9.84A1.258,1.258,0,0,0,91.2,18.158v9.248a1.258,1.258,0,0,0,1.258,1.258H99.19l7.25,3.773h5.327a1.258,1.258,0,0,0,1.258-1.258V27.627"
-                                                transform="translate(-23.728 -4.397)" />
-                                            <line class="m" x1="43.65" transform="translate(32.256 42.614)" />
-                                            <line class="n" x1="72.133" transform="translate(1.406 31.295)" />
-                                            <line class="m" x1="9.84" transform="translate(94.476 42.614)" />
-                                            <path class="o" d="M133.7,42.3s-4.365.666-3.625,2.589,7.4,3.7,7.4,3.7"
-                                                transform="translate(-33.819 -11.005)" />
-                                        </g>
-                                    </g>
-                                </g>
-                                <path class="p" d="M3868.735,327h-770" transform="translate(-2847.735)" />
-                            </g>
-                        </svg>
-                    </span>
+<!-- svg -->
                 </div>
 
                 <!-- Input Fields -->
@@ -509,7 +318,11 @@ function parcel_moving_form_shortcode()
 }
 add_shortcode('parcel_moving_form', 'parcel_moving_form_shortcode');
 
-// Admin page to display form submissions
+
+
+
+
+//===================================== Admin page to display form submissions with Delete feature ==========================================
 function parcel_moving_add_admin_menu()
 {
     add_menu_page(
@@ -522,30 +335,42 @@ function parcel_moving_add_admin_menu()
         20
     );
 }
+
 add_action('admin_menu', 'parcel_moving_add_admin_menu');
 
 function parcel_moving_display_submissions()
 {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'parcel_moving_data';
+    $table_name = $wpdb->prefix . 'parcel_moving_data1';
+
+    // Handle delete action if the delete request is sent
+    if (isset($_GET['delete_id'])) {
+        $delete_id = intval($_GET['delete_id']);
+        $wpdb->delete($table_name, array('id' => $delete_id)); // Delete entry from the database
+        echo '<div class="updated notice is-dismissible"><p>Entry deleted successfully.</p></div>';
+    }
+
     $results = $wpdb->get_results("SELECT * FROM $table_name");
 
     echo '<div class="wrap"><h1>Parcel Moving Submissions</h1>';
     if ($results) {
         echo '<table class="widefat fixed" cellspacing="0">';
-        echo '<thead><tr><th>ID</th><th>From</th><th>To</th><th>Date</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Area</th><th>Time</th></tr></thead>';
+        echo '<thead><tr><th>ID</th><th>From</th><th>To</th><th>Date</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Area</th><th>Time</th><th>Actions</th></tr></thead>';
         echo '<tbody>';
         foreach ($results as $row) {
+            $delete_url = esc_url(add_query_arg(array('delete_id' => $row->id)));
             echo '<tr>';
             echo '<td>' . esc_html($row->id) . '</td>';
             echo '<td>' . esc_html($row->from_location) . '</td>';
             echo '<td>' . esc_html($row->to_location) . '</td>';
             echo '<td>' . esc_html($row->date) . '</td>';
             echo '<td>' . esc_html($row->full_name) . '</td>';
-            echo '<td>' . esc_html($row->last_name) . '</td>';
+            echo '<td>' . esc_html($row->phone) . '</td>';
             echo '<td>' . esc_html($row->email) . '</td>';
-            echo '<td>' . esc_html($row->extra_data) . '</td>';
+            echo '<td>' . esc_html($row->area) . '</td>';
             echo '<td>' . esc_html($row->time) . '</td>';
+            // Add the delete action link
+            echo '<td><a href="' . $delete_url . '" onclick="return confirm(\'Are you sure you want to delete this entry?\');" class="button button-danger">Delete</a></td>';
             echo '</tr>';
         }
         echo '</tbody></table>';
@@ -554,13 +379,3 @@ function parcel_moving_display_submissions()
     }
     echo '</div>';
 }
-
-
-
-
-
-
-
-
-
-

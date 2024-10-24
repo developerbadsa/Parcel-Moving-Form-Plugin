@@ -42,7 +42,10 @@ label.parcel-moving-form-input svg {
 label.parcel-moving-form-input span {
    position: relative;
    display: flex;
-   left: -30px;
+   left: -40px;
+}
+span.parcel-moving-form-input-date {
+   visibility: hidden;
 }
 button#goto-button {
    background: #ff5620;
@@ -54,6 +57,7 @@ button#goto-button {
    font-weight: 700;
    cursor: pointer;
 }
+
 /* css for suggesion */
 .suggestions-list {
    list-style: none;
@@ -83,6 +87,7 @@ button#goto-button {
 
 /* form popup css */
 .parcel-moving-form-popup {
+   width: 700px;
    padding: 30px 38px !important;
 }
 
@@ -168,4 +173,82 @@ button#submit-extra-data {
    flex-direction: column;
    justify-content: center;
    align-items: center;
+}
+
+
+
+
+
+
+
+/* responsive */
+
+@media (min-width: 320px) and (max-width: 768px) {
+   .parcel-moving-form-inputs {
+      grid-template-columns: 1fr;
+      justify-content: center;
+      align-content: center;
+      margin: 0px 23px;
+      gap: 29px;
+   }
+
+   label.parcel-moving-form-input input {
+      width: 300px !important;
+      justify-content: center;
+   }
+
+   label.parcel-moving-form-input {
+      justify-content: center;
+   }
+   label.parcel-moving-form-input span {
+      position: relative;
+      display: flex;
+   }
+   /* popup */
+   .parcel-moving-form-popup {
+      width: 100%;
+      padding: 24px 27px !important;
+   }
+
+   .parcel-moving-form-popup-fields {
+      grid-template-columns: 1fr !important;
+  }
+
+  .parcel-moving-form-popup-checkbox-item span {
+   font-size: 10px;
+}
+
+.parcel-moving-form-popup-content {
+   margin: 0;
+   padding: 0px !important;
+}
+
+
+}
+
+@media (max-width: 375px) {
+   .parcel-moving-form-inputs {
+      grid-template-columns: 1fr;
+      justify-content: center;
+      align-content: center;
+      margin: 0px 23px;
+      gap: 29px;
+   }
+
+   label.parcel-moving-form-input {
+      justify-content: center;
+   }
+   label.parcel-moving-form-input span {
+      position: relative;
+      display: flex;
+   }
+
+   label.parcel-moving-form-input input {
+      width: 200px !important;
+      justify-content: center;
+   }
+   .parcel-moving-form-popup {
+      width: 100%;
+      padding: 23px 28px !important;
+  }
 }
