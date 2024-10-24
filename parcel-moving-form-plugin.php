@@ -355,12 +355,12 @@ function parcel_moving_display_submissions()
     echo '<div class="wrap"><h1>Parcel Moving Submissions</h1>';
     if ($results) {
         echo '<table class="widefat fixed" cellspacing="0">';
-        echo '<thead><tr><th>ID</th><th>From</th><th>To</th><th>Date</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Area</th><th>Time</th><th>Actions</th></tr></thead>';
+        echo '<thead><tr><th>From</th><th>To</th><th>Date</th><th>Full Name</th><th>Phone</th><th>Email</th><th>Area</th><th>Time</th><th>Actions</th></tr></thead>';
         echo '<tbody>';
         foreach ($results as $row) {
             $delete_url = esc_url(add_query_arg(array('delete_id' => $row->id)));
             echo '<tr>';
-            echo '<td>' . esc_html($row->id) . '</td>';
+            // echo '<td>' . esc_html($row->id) . '</td>';
             echo '<td>' . esc_html($row->from_location) . '</td>';
             echo '<td>' . esc_html($row->to_location) . '</td>';
             echo '<td>' . esc_html($row->date) . '</td>';
