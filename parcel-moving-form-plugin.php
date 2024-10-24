@@ -327,7 +327,7 @@ function parcel_moving_add_admin_menu()
 {
     add_menu_page(
         'Parcel Moving Submissions',
-        'Parcel Submissions',
+        'Parcel Entries',
         'manage_options',
         'parcel-moving-submissions',
         'parcel_moving_display_submissions',
