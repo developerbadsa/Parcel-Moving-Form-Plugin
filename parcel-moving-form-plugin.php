@@ -533,15 +533,6 @@ function parcel_moving_form_shortcode()
                 </div>
 
 
-                <!-- Input Fields -->
-                <!-- <div class="parcel-moving-form-popup-fields">
-                    <label>First Name: <input type="text" id="full_name" name="full_name" required></label><br>
-                    <label>Last Name: <input type="text" id="last_name" name="last_name" required></label><br>
-                    <label>Email: <input type="email" id="email" name="email" required></label><br>
-                    <label>Extra Data: <textarea id="extra_data" name="extra_data" required></textarea><br></label>
-                </div> -->
-
-
                 <button id="submit-extra-data" type="submit">Kostenloses Angebot erhalten</button>
                 <div class="parcel-form-payment-icons">
                     <div>
