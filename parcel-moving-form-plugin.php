@@ -224,7 +224,7 @@ function parcel_moving_form_shortcode()
             <!-- From Location -->
             <div>
                 <label class="parcel-moving-form-input">
-                    <input type="text" id="from_location" placeholder="Auszugsadresse" autocomplete="off"
+                    <input type="text" id="from_location" class="from_location" placeholder="Auszugsadresse" autocomplete="off"
                         name="from_location" required>
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
@@ -237,12 +237,12 @@ function parcel_moving_form_shortcode()
                         </svg>
                     </span>
                 </label>
-                <ul id="from_location_suggestions" class="suggestions-list"></ul>
+                <ul id="from_location_suggestions"  class="suggestions-list from_location_suggestions_view"></ul>
             </div>
             <!-- To Location -->
             <div>
                 <label class="parcel-moving-form-input">
-                    <input type="text" id="to_location" placeholder="Einzugsadresse" name="to_location" autocomplete="off"
+                    <input type="text" id="to_location" class="to_location" placeholder="Einzugsadresse" name="to_location" autocomplete="off"
                         required>
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
@@ -255,7 +255,7 @@ function parcel_moving_form_shortcode()
                         </svg>
                     </span>
                 </label>
-                <ul id="to_location_suggestions" class="suggestions-list"></ul>
+                <ul id="to_location_suggestions" class="suggestions-list to_location_suggestions_view"></ul>
             </div>
             <!-- Date -->
             <div>
@@ -275,7 +275,7 @@ function parcel_moving_form_shortcode()
                 </label>
                 <ul id="to_location_suggestions" class="suggestions-list"></ul>
             </div>
-            <button type="button" id="goto-button">Get a Free Qoute</button>
+            <button type="button" id="goto-button">Kostenloses Angebot erhalten</button>
         </div>
 
         <!-- Modal for Extra Data -->
@@ -520,13 +520,15 @@ function parcel_moving_form_shortcode()
                     <div class="parcel-moving-form-popup-checkbox-item">
                         <input type="checkbox" name="" id="checkbox1" required>
                         <span>
-                        Ich stimme zu Datenschutzbestimmungen, Widerrufsbelehrung, Allgemeine Geschäftsbedingungen. Mit der Zustimmung erlauben Sie unser Angebot Ihnen auch per Telefonanruf bereitzustellen.
+                     
+Ich stimme den Datenschutzbestimmungen, der Widerrufsbelehrung und den AGB zu. Sie erlauben uns, das Angebot auch telefonisch bereitzustellen.
                         </span>
                     </div>
                     <div class="parcel-moving-form-popup-checkbox-item">
                         <input type="checkbox" name="" id="checkbox1" required>
                         <span>
-                        Ich stimme zu, Angebote zu Werbezwecken von Movinga oder ausgewählten Movinga-Partnern zu erhalten. Dafür darf Movinga meine Daten nutzen und gegebenenfalls auch an ausgewählte Movinga-Partner weitergeben.
+                       
+Ich stimme zu, Angebote von Movinga und ausgewählten Partnern zu Werbezwecken zu erhalten.
 
                         </span>
                     </div>
