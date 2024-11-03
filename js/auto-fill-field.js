@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(sections)
 
     sections.forEach(section => {
-        const fromLocationInput = section.querySelector('.from_location');
-        const toLocationInput = section.querySelector('.to_location');
+        const fromLocationInput = section.querySelector('.from_location_input');
+        const toLocationInput = section.querySelector('.to_location_input');
         const fromLocationSuggestions = section.querySelector('.from_location_suggestions_view');
         const toLocationSuggestions = section.querySelector('.to_location_suggestions_view');
 

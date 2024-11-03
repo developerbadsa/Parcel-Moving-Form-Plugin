@@ -216,17 +216,17 @@ function parcel_moving_form_shortcode()
 {
     ob_start(); // Start output buffering to return form HTML
     ?>
-    <form id="parcel-moving-form">
-        <?php wp_nonce_field('parcel_moving_nonce_action', 'parcel_moving_nonce'); ?>
+<form class="parcel-moving-form">
+    <?php wp_nonce_field('parcel_moving_nonce_action', 'parcel_moving_nonce'); ?>
 
-        <!-- Frontend form -->
-        <div class="parcel-moving-form-inputs">
-            <!-- From Location -->
-            <div>
-                <label class="parcel-moving-form-input">
-                    <input type="text" id="from_location" class="from_location" placeholder="Auszugsadresse" autocomplete="off"
-                        name="from_location" required>
-                    <span>
+    <!-- Frontend form -->
+    <div class="parcel-moving-form-inputs">
+        <!-- From Location -->
+        <div>
+            <label class="parcel-moving-form-input">
+                <input type="text" class="from_location_input" placeholder="Auszugsadresse" autocomplete="off"
+                    name="from_location" required>
+                <span>
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
                             version="1.1" id="Capa_1" width="800px" height="800px" viewBox="0 0 395.71 395.71"
                             xml:space="preserve">
@@ -236,67 +236,45 @@ function parcel_moving_form_shortcode()
                             </g>
                         </svg>
                     </span>
-                </label>
-                <ul id="from_location_suggestions"  class="suggestions-list from_location_suggestions_view"></ul>
-            </div>
-            <!-- To Location -->
-            <div>
-                <label class="parcel-moving-form-input">
-                    <input type="text" id="to_location" class="to_location" placeholder="Einzugsadresse" name="to_location" autocomplete="off"
-                        required>
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
-                            version="1.1" id="Capa_1" width="800px" height="800px" viewBox="0 0 395.71 395.71"
-                            xml:space="preserve">
-                            <g>
-                                <path
-                                    d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738   c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388   C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191   c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z" />
-                            </g>
-                        </svg>
-                    </span>
-                </label>
-                <ul id="to_location_suggestions" class="suggestions-list to_location_suggestions_view"></ul>
-            </div>
-            <!-- Date -->
-            <div>
-                <label class="parcel-moving-form-input">
-                    <input type="date" style="font-size:18px" placeholder="Umzugsdtum" id="date" name="date" required>
-                    <span class="parcel-moving-form-input-date">
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path
-                                    d="M3 9H21M7 3V5M17 3V5M6 12H10V16H6V12ZM6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.07989 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z"
-                                    stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </g>
-                        </svg>
-                    </span>
-                </label>
-                <ul id="to_location_suggestions" class="suggestions-list"></ul>
-            </div>
-            <button type="button" id="goto-button">Kostenloses Angebot erhalten</button>
+            </label>
+            <ul class="from_location_suggestions_view suggestions-list"></ul>
         </div>
+        <!-- To Location -->
+        <div>
+            <label class="parcel-moving-form-input">
+                <input type="text" class="to_location_input" placeholder="Einzugsadresse" name="to_location" autocomplete="off"
+                    required>
+                <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"
+                            version="1.1" id="Capa_1" width="800px" height="800px" viewBox="0 0 395.71 395.71"
+                            xml:space="preserve">
+                            <g>
+                                <path
+                                    d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738   c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388   C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191   c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z" />
+                            </g>
+                        </svg>
+                    </span>
+            </label>
+            <ul class="to_location_suggestions_view suggestions-list"></ul>
+        </div>
+        <!-- Date -->
+        <div>
+            <label class="parcel-moving-form-input">
+                <input type="date" class="date_input" style="font-size:18px" placeholder="Umzugsdtum" name="date" required>
+                <!-- SVG icon here -->
+            </label>
+        </div>
+        <button type="button" class="goto-button">Kostenloses Angebot erhalten</button>
+    </div>
 
-        <!-- Modal for Extra Data -->
-        <div id="extra-data-modal"
-            style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
-
-            <!-- Main container of popup -->
-            <div class="parcel-moving-form-popup"
-                style="">
-                <button id="close-modal-button"
-                    style="position: absolute; top: 10px; right: 10px; border: none; background: none; font-size: 18px; cursor: pointer;">&times;</button>
-
-
-
-
-                <div class="parcel-moving-form-popup-content">
-                    <h2 class="parcel-moving-form-popup-title">Mein Umzug</h2>
-                    <p>Fordern Sie hier ihr kostenloses und unverbindliches Angebot an</p>
-
-
-                    <span class="parcel-moving-form-popup-img">
+    <!-- Modal for Extra Data -->
+    <div class="extra-data-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 999;">
+        <div class="parcel-moving-form-popup">
+            <button class="close-modal-button" style="position: absolute; top: 10px; right: 10px; border: none; background: none; font-size: 18px; cursor: pointer;">&times;</button>
+            <div class="parcel-moving-form-popup-content">
+                <h2 class="parcel-moving-form-popup-title">Mein Umzug</h2>
+                <p>Fordern Sie hier ihr kostenloses und unverbindliches Angebot an</p>
+                  <span class="parcel-moving-form-popup-img">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="773"
                             height="101.569" viewBox="0 0 773 101.569">
                             <defs>
@@ -496,15 +474,15 @@ function parcel_moving_form_shortcode()
                             </g>
                         </svg>
                     </span>
-                </div>
+            </div>
 
-                <!-- Input Fields -->
-                <div class="parcel-moving-form-popup-fields">
-                    <label> <input placeholder="Vor- und Nachname" type="text" id="full_name" name="full_name" required></label>
-                    <label> <input placeholder="Email" type="email" id="email" name="email" required></label>
-                    <label> <input placeholder="Telefonnummer" type="phone" id="last_name" name="last_name"
-                            required></label>
-                    <label> <select placeholder="Fläche" id="extra_data" name="extra_data" required>
+            <!-- Input Fields -->
+            <div class="parcel-moving-form-popup-fields">
+                <label> <input placeholder="Vor- und Nachname" type="text" class="full_name_input" name="full_name" required></label>
+                <label> <input placeholder="Email" type="email" class="email_input" name="email" required></label>
+                <label> <input placeholder="Telefonnummer" type="phone" class="last_name_input" name="last_name"
+                        required></label>
+                <label> <select placeholder="Fläche" class="extra_data_select" name="extra_data" required>
                             <option value="20">Wohnung 20 m²</option>
                             <option value="40">20 to 40 m²</option>
                             <option value="60">40 to 60 m²</option>
@@ -512,31 +490,27 @@ function parcel_moving_form_shortcode()
                             <option value="100">80 to 100 m²</option>
                             <option value="200">100 to 200 m²</option>
                             <option value="300">200 m² und darüber</option>
-                        </select></label>
+                    </select></label>
+            </div>
+
+            <!-- Checkboxes for agreements -->
+            <div class="parcel-moving-form-popup-checkboxs">
+                <div class="parcel-moving-form-popup-checkbox-item">
+                    <input type="checkbox" class="checkbox1" required>
+                    <span>
+                        Ich stimme den Datenschutzbestimmungen, der Widerrufsbelehrung und den AGB zu.
+                    </span>
                 </div>
-
-                <!-- Checkboxs with agreements -->
-                <div class="parcel-moving-form-popup-checkboxs">
-                    <div class="parcel-moving-form-popup-checkbox-item">
-                        <input type="checkbox" name="" id="checkbox1" required>
-                        <span>
-                     
-Ich stimme den Datenschutzbestimmungen, der Widerrufsbelehrung und den AGB zu. Sie erlauben uns, das Angebot auch telefonisch bereitzustellen.
-                        </span>
-                    </div>
-                    <div class="parcel-moving-form-popup-checkbox-item">
-                        <input type="checkbox" name="" id="checkbox1" required>
-                        <span>
-                       
-Ich stimme zu, Angebote von Movinga und ausgewählten Partnern zu Werbezwecken zu erhalten.
-
-                        </span>
-                    </div>
+                <div class="parcel-moving-form-popup-checkbox-item">
+                    <input type="checkbox" class="checkbox2" required>
+                    <span>
+                        Ich stimme zu, Angebote von Movinga und ausgewählten Partnern zu Werbezwecken zu erhalten.
+                    </span>
                 </div>
-
-
-                <button id="submit-extra-data" type="submit">Kostenloses Angebot erhalten</button>
-                <div class="parcel-form-payment-icons">
+            </div>
+            <button class="submit-extra-data" type="submit">Kostenloses Angebot erhalten</button>
+            
+            <div class="parcel-form-payment-icons">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="33.79" height="39.575" viewBox="0 0 33.79 39.575">
                             <g id="ICON-Paypal" transform="translate(16.895 19.788)">
@@ -664,10 +638,10 @@ Ich stimme zu, Angebote von Movinga und ausgewählten Partnern zu Werbezwecken z
                     </div>
 
                 </div>
-            </div>
         </div>
+    </div>
+</form>
 
-    </form>
     <?php
     return ob_get_clean(); // Return the form HTML
 }

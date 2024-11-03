@@ -1,43 +1,34 @@
-
-
 jQuery(document).ready(function ($) {
    // Show the modal on button click
-   $('#goto-button').on('click', function () {
-      $('#extra-data-modal').fadeIn(); // Show the modal
+   $('.goto-button').on('click', function () {
+   
+   console.log('clicked')
+   
+      $(this).closest('.parcel-moving-form').find('.extra-data-modal').fadeIn(); // Show the modal
    });
 
-//    Hide the modal on close button click
-   $('#close-modal-button, #cancel-modal').on('click', function () {
-      $('#extra-data-modal').fadeOut(); // Hide the modal
+   // Hide the modal on close button click
+   $('.close-modal-button, .cancel-modal').on('click', function () {
+      $(this).closest('.extra-data-modal').fadeOut(); // Hide the modal
    });
 
-   // Handle the form submission
-   $('#parcel-moving-form').on('submit', function (event) {
-
+   // Handle form submission
+   $('.parcel-moving-form').on('submit', function (event) {
       event.preventDefault(); // Prevent default form submission
 
-      // Check if both checkboxes are checked
-      // if (!$('#checkbox1').is(':checked') || !$('#checkbox2').is(':checked')) {
-      //    alert('You must agree to the terms and conditions to proceed.');
-      //    return; // Stop the form submission
-      // }
-
-         // if (!checkbox1.is(':checked') || !checkbox2.is(':checked')) {
-         //    alert('You must agree to the terms and conditions to proceed.');
-         //    return; // Stop the form submission
-         // }
+      const $form = $(this); // Reference to the current form
 
       // Collect data from the form
       const finalData = {
          action: 'parcel_moving_form_submit',
-         parcel_moving_nonce: $('#parcel_moving_nonce').val(), // Include nonce for security
-         from_location: $('#from_location').val(),
-         to_location: $('#to_location').val(),
-         date: $('#date').val(),
-         full_name: $('#full_name').val(),
-         last_name: $('#last_name').val(),
-         email: $('#email').val(),
-         extra_data: $('#extra_data').val(),
+         parcel_moving_nonce: $form.find('[name="parcel_moving_nonce"]').val(), // Include nonce for security
+         from_location: $form.find('.from_location_input').val(),
+         to_location: $form.find('.to_location_input').val(),
+         date: $form.find('.date_input').val(),
+         full_name: $form.find('.full_name_input').val(),
+         last_name: $form.find('.last_name_input').val(),
+         email: $form.find('.email_input').val(),
+         extra_data: $form.find('.extra_data_select').val(),
       };
 
       console.log('Sending data:', finalData); // Log the data being sent for debugging
@@ -48,8 +39,8 @@ jQuery(document).ready(function ($) {
             console.log(response); // Log the response from the server for debugging
             if (response.success) {
                alert('Form submitted successfully!');
-               $('#parcel-moving-form')[0].reset(); // Reset the form
-               $('#extra-data-modal').fadeOut(); // Close the modal
+               $form[0].reset(); // Reset the form
+               $form.find('.extra-data-modal').fadeOut(); // Close the modal
             } else {
                alert('Error: ' + response.data);
             }
