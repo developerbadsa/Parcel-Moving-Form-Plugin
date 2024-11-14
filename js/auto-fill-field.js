@@ -1,88 +1,116 @@
-document.addEventListener('DOMContentLoaded', function () {
-   const fromLocationInput = document.getElementById('from_location');
-   const toLocationInput = document.getElementById('to_location');
-   const fromLocationSuggestions = document.getElementById(
-      'from_location_suggestions'
-   );
-   const toLocationSuggestions = document.getElementById(
-      'to_location_suggestions'
-   );
 
-   // Function to fetch location data from Nominatim API
-   async function fetchLocationData(query) {
-      const response = await fetch(
-         `https://nominatim.openstreetmap.org/search?q=${query}&format=json`
-      );
-      const data = await response.json();
-      return data;
-   }
 
-   function showSuggestions(input, suggestionsBox, locations) {
-      const inputValue = input.value.toLowerCase();
 
-      // Filter locations based on input value
-      const filteredSuggestions = locations.filter(location =>
-         location.display_name.toLowerCase().includes(inputValue)
-      );
+const sections = document.querySelectorAll('.parcel-moving-form-inputs');
+const dateInput = document.querySelector('.date_input');
 
-      // Clear previous suggestions
-      suggestionsBox.innerHTML = '';
+document.addEventListener("DOMContentLoaded", function() {
+const dateInput = document.querySelector(".date-input");
+const dateLabel = document.querySelector(".date-picker-label");
 
-      if (filteredSuggestions.length > 0 && inputValue !== '') {
-         filteredSuggestions.forEach(location => {
-            console.log(location);
-            const suggestionItem = document.createElement('li');
-            suggestionItem.innerHTML = `
-            <div class='parcel-moving-suggestion'>
-           <div class='parcel-moving-suggestion'>
-    <h6 style=" margin: 0px; font-weight: 600; line-height: 17px;">
-        ${location?.name}
-    </h6>
-    <span style="font-size: 12px; font-weight: 400; line-height: 14px; margin: 0px;">
-        ${location?.display_name}
-    </span>
-</div>
-`;
-            suggestionItem.addEventListener('click', () => {
-               input.value = `${location.display_name}`;
-               suggestionsBox.style.display = 'none'; // Hide suggestions after selection
+// Check if input has value on load
+if (dateInput.value) {
+    dateLabel.classList.add("active");
+}
+
+dateInput.addEventListener("focus", function() {
+    dateLabel.classList.add("active");
+});
+
+dateInput.addEventListener("blur", function() {
+    if (!dateInput.value) {
+        dateLabel.classList.remove("active");
+    }
+});
+
+
+
+
+sections.forEach(section => {
+    const fromLocationInput = section.querySelector('.from_location_input');
+    const toLocationInput = section.querySelector('.to_location_input');
+    const fromLocationSuggestions = section.querySelector('.from_location_suggestions_view');
+    const toLocationSuggestions = section.querySelector('.to_location_suggestions_view');
+    
+    
+    
+    
+    
+    
+    
+
+    // Initialize AutocompleteService from Google Maps API
+    const autocompleteService = new google.maps.places.AutocompleteService();
+
+    function fetchLocationData(query, callback) {
+        autocompleteService.getPlacePredictions({
+            input: query,
+            componentRestrictions: { country: 'DE' } // Restrict to Germany
+        }, (predictions, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                callback(predictions);
+            } else {
+                callback([]);
+            }
+        });
+    }
+
+    function showSuggestions(input, suggestionsBox, predictions) {
+        suggestionsBox.innerHTML = '';
+
+        if (predictions.length > 0 && input.value !== '') {
+            predictions.forEach(prediction => {
+                const suggestionItem = document.createElement('li');
+                suggestionItem.innerHTML = `
+                    <div class='parcel-moving-suggestion'>
+                        <h6 style="margin: 0; font-weight: 600; line-height: 17px;">
+                            ${prediction.structured_formatting.main_text}
+                        </h6>
+                        <span style="font-size: 12px; font-weight: 400; line-height: 14px; margin: 0;">
+                            ${prediction.structured_formatting.secondary_text || ''}
+                        </span>
+                    </div>
+                `;
+                
+                suggestionItem.addEventListener('click', () => {
+                    input.value = prediction.description;
+                    suggestionsBox.style.display = 'none';
+                });
+                suggestionsBox.appendChild(suggestionItem);
             });
-            suggestionsBox.appendChild(suggestionItem);
-         });
-         suggestionsBox.style.display = 'inline'; // Show suggestions
-      } else {
-         suggestionsBox.style.display = 'none'; // Hide if no suggestions
-      }
-   }
+            suggestionsBox.style.display = 'block';
+        } else {
+            suggestionsBox.style.display = 'none';
+        }
+    }
 
-   // Event listeners for input fields with API call
-   fromLocationInput.addEventListener('input', async () => {
-      const query = fromLocationInput.value;
-      if (query) {
-         const locations = await fetchLocationData(query);
-         showSuggestions(fromLocationInput, fromLocationSuggestions, locations);
-      } else {
-         fromLocationSuggestions.style.display = 'none';
-      }
-   });
+    fromLocationInput.addEventListener('input', () => {
+        const query = fromLocationInput.value;
+        if (query) {
+            fetchLocationData(query, predictions => {
+                showSuggestions(fromLocationInput, fromLocationSuggestions, predictions);
+            });
+        } else {
+            fromLocationSuggestions.style.display = 'none';
+        }
+    });
 
-   toLocationInput.addEventListener('input', async () => {
-      const query = toLocationInput.value;
-      if (query) {
-         const locations = await fetchLocationData(query);
-         showSuggestions(toLocationInput, toLocationSuggestions, locations);
-      } else {
-         toLocationSuggestions.style.display = 'none';
-      }
-   });
+    toLocationInput.addEventListener('input', () => {
+        const query = toLocationInput.value;
+        if (query) {
+            fetchLocationData(query, predictions => {
+                showSuggestions(toLocationInput, toLocationSuggestions, predictions);
+            });
+        } else {
+            toLocationSuggestions.style.display = 'none';
+        }
+    });
 
-   // Hide suggestions when clicking outside the input
-   document.addEventListener('click', function (e) {
-      if (!fromLocationInput.contains(e.target)) {
-         fromLocationSuggestions.style.display = 'none';
-      }
-      if (!toLocationInput.contains(e.target)) {
-         toLocationSuggestions.style.display = 'none';
-      }
-   });
+    document.addEventListener('click', function (e) {
+        if (!section.contains(e.target)) {
+            fromLocationSuggestions.style.display = 'none';
+            toLocationSuggestions.style.display = 'none';
+        }
+    });
+});
 });
