@@ -1,54 +1,88 @@
+/* Main Form Container */
 .parcel-moving-form-inputs {
    display: grid;
    grid-template-columns: 1fr 1fr 1fr 1fr;
    background-image: linear-gradient(
       142deg,
       rgba(255, 255, 255, 1) 38%,
-      rgb(255 255 255 / 24%) 68%
+      rgba(255, 255, 255, 0.24) 68%
    );
    background-repeat: no-repeat;
    border-radius: 10px;
    justify-content: center;
    align-items: center;
    gap: 10px;
-   padding: 30px 25px 30px;
+   padding: 30px 25px;
    position: relative;
    backdrop-filter: blur(6px);
    background-color: rgba(255, 255, 255, 0.3);
-   -webkit-backdrop-filter: blur(6px);
+   z-index: 999 !important;
 }
 .parcel-moving-form-inputs input {
    height: 38px;
    border-radius: 5px;
-   border: 1px #a0a0a0 solid;
+   border: 1px solid #a0a0a0;
    padding: 20px 15px;
    font-size: 16px;
 }
-.parcel-moving-form-inputs input:active {
-   border: 1px #a0a0a0 solid;
+
+span.date-picker-label {
+    display: block;
 }
 
+.parcel-moving-form-inputs input:focus {
+   border: 1px solid #a0a0a0;
+}
+
+.form-icon-data {
+  display:none
+}
+@media (min-width: 1024px) {
+    .lock-icon-form svg {
+    width: 25px;
+    height: 24px;
+}
+
+.form-icon-data {
+    display: flex;
+    justify-content: space-between;
+      grid-column-end: span 4;
+    align-items:center;
+    padding-top:10px;
+}
+
+.lock-icon-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+}
+
+.parcel-moving-button-wizerd .parcel-moving-form-inputs .form-icon-data{
+    display:none
+}
+
+/* Input Label with Icon */
 label.parcel-moving-form-input {
    display: flex;
    align-items: center;
+       position: relative;
+       width: 100% !important;
 }
-
 label.parcel-moving-form-input svg {
    width: 25px !important;
    height: auto;
    fill: gray;
 }
-
 label.parcel-moving-form-input span {
-   position: relative;
-   display: flex;
-   left: -40px;
+    position: absolute;
+    left: 87% !important;
 }
 span.parcel-moving-form-input-date {
    visibility: hidden;
 }
-button#goto-button {
-   background: #ff5620;
+button.goto-button {
+   background: #FACE21;
    border: none;
    padding: 12px 12px;
    color: white;
@@ -58,7 +92,11 @@ button#goto-button {
    cursor: pointer;
 }
 
-/* css for suggesion */
+button.goto-button:hover {
+   background: #484848;
+}
+
+/* Suggestions Styling */
 .suggestions-list {
    list-style: none;
    margin: 0;
@@ -68,204 +106,272 @@ button#goto-button {
    position: absolute;
    z-index: 999;
    width: 100%;
-   overflow-y: auto;
    display: none;
    width: 225px;
    border-radius: 10px;
-   max-height:250px
+   max-height: 250px;
+   overflow-y: auto;
 }
-
 .suggestions-list li {
    padding: 10px;
    cursor: pointer;
    border-bottom: 1px solid #e0e0e0;
 }
-
 .suggestions-list li:hover {
    background-color: #f0f0f0;
 }
-
-/* 
 .parcel-moving-suggestion h6 {
-   background: blue;
-   margin: 10px 0px;
-   font-weight:600;
+   font-size: 18px;
+   font-weight: 600;
    line-height: 17px;
-   margin: 0px;
-} */
-
-/* .parcel-moving-suggestion span {
+   margin: 0;
+}
+.parcel-moving-suggestion span {
    font-size: 12px;
-   font-weight:400;
+   font-weight: 400;
    line-height: 14px;
-   margin: 0px;
-} */
-
-
-/* form popup css */
-.parcel-moving-form-popup {
-   width: 700px;
-   padding: 30px 38px !important;
+   margin: 0;
 }
 
-.parcel-moving-form-popup-content {
+
+
+
+/* Popup Styling */
+.parcel-moving-form-popup {
+   padding: 24px 27px;
+   position: relative;
+   margin: 5% auto;
+   width: 750px;
+   background: white;
+   border-radius: 8px;
+   overflow: hidden;
+   overflow-y: auto;
+   max-height: 90vh;
+   z-index: 1000;
    display: flex;
    flex-direction: column;
    justify-content: center;
    align-items: center;
-   gap: 0px;
+   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
-
+.parcel-moving-form-popup-content {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+}
 h2.parcel-moving-form-popup-title {
-   padding: 0px 0px !important;
-   line-height: 75px;
-   font-size: 36px;
-   margin: 0;
+   line-height: 1.2;
+   font-size: 28px;
+   margin-bottom: 15px;
 }
-
 .parcel-moving-form-popup-content p {
    font-size: 16px;
-   padding: 0px;
-   margin: 0px;
+   margin: 0;
 }
-
-span.parcel-moving-form-popup-img svg {
-   width: 99%;
-   align-self: center;
-}
-
-.parcel-moving-form-popup-fields {
-   display: grid;
-   grid-template-columns: 1fr 1fr !important;
-   gap: 19px;
-   margin: 15px 0px;
+span.parcel-moving-form-popup-img svg{
+    width: 90% !important;
 }
 
 .parcel-moving-form-popup-fields label input {
-   height: 38px !important;
+    width: 100% !important;
+}
+
+/* Popup Form Fields */
+.parcel-moving-form-popup-fields {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 19px;
+   width: 100%;
+   margin: 15px 0;
+}
+.parcel-moving-form-popup-fields label input,
+.parcel-moving-form-popup-fields label textarea {
+   height: 38px;
    padding: 12px 15px;
    font-size: 16px;
-   border: 1px solid #adafb2 !important;
+   border: 1px solid #adafb2;
    border-radius: 5px;
 }
-.parcel-moving-form-popup-fields label textarea {
-   height: 38px !important;
-   padding: 12px 15px;
+.parcel-moving-form-popup-fields select {
+   height: 38px;
+   padding: 1px 15px;
    font-size: 16px;
-   border: 1px solid #adafb2 !important;
+   border: 1px solid #adafb2;
    border-radius: 5px;
+   width: 100%;
+}
+
+/* Checkboxes in Popup */
+.parcel-moving-form-popup-checkboxs span {
+    font-size: 13px;
+    line-height: 13px !important;
+}
+.parcel-moving-form-popup-checkbox-item {
+    display: flex;
+    gap: 7px;
 }
 
 .parcel-moving-form-popup-checkboxs {
+    gap: 7px !important;
+    display: flex;
+    flex-direction: column;
+}
+.parcel-moving-form-popup-checkboxes {
    margin: 12px 0;
    display: flex;
    flex-direction: column;
-   gap: 16px;
+   gap: 8px;
 }
-
-.parcel-moving-form-popup-checkboxs div {
+.parcel-moving-form-popup-checkboxes div {
    display: flex;
-   justify-content: center;
    align-items: center;
    gap: 5px;
 }
 
-button#submit-extra-data {
+/* Submit Button */
+button.submit-extra-data {
    padding: 14px 22px;
+   margin: 20px 0;
    font-size: 18px;
    border-radius: 5px;
-   background: #ff5c00;
+   background: #FACE21;
    border: none;
    color: white;
    font-weight: 600;
    cursor: pointer;
 }
 
-button#submit-extra-data {
-   text-align: center;
+button.submit-extra-data:hover {
+   background: #484848;
 }
 
-.parcel-moving-form-popup {
+/* Payment Icons in Popup */
+.parcel-form-payment-icons {
    display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
+   gap: 20px;
+   margin-top: 20px;
+}
+
+/* Responsive Styling */
+@media (max-width: 767px) {
+
+  .date_input{
+width: 100% !important;
+}
+
+   .parcel-moving-form-inputs {
+      width: 100% !important;
+      grid-template-columns: 1fr;
+      gap: 20px;
+   }
+   
+
+   label.parcel-moving-form-input input {
+          width: 100% !important;
+   }
+   label.parcel-moving-form-input span {
+      position: absolute;
+      left: 85%;
+   }
+    .parcelform-home-banner .form-icon-data {
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        place-content: center;
+        align-items: center;
+        gap:5px
+    }
+    .text-form-b {
+    text-align: center;
 }
 
 
 
+span.date-picker-label {
+     display:inline-block;
+}
 
 
-
-
-/* responsive */
-
-@media (min-width: 320px) and (max-width: 768px) {
-   .parcel-moving-form-inputs {
-      grid-template-columns: 1fr;
-      justify-content: center;
-      align-content: center;
-      margin: 0px 23px;
-      gap: 29px;
-   }
-
-   label.parcel-moving-form-input input {
-      width: 300px !important;
-      justify-content: center;
-   }
-
-   label.parcel-moving-form-input {
-      justify-content: center;
-   }
-   label.parcel-moving-form-input span {
-      position: relative;
-      display: flex;
-   }
-   /* popup */
+   /* Popup Responsive */
    .parcel-moving-form-popup {
-      width: 100%;
-      padding: 24px 27px !important;
+      padding: 17px 27px;
+      width: 90%;
+      max-height: 90vh;
+        margin: 42% auto;
    }
-
    .parcel-moving-form-popup-fields {
-      grid-template-columns: 1fr !important;
-  }
-
-  .parcel-moving-form-popup-checkbox-item span {
-   font-size: 10px;
-}
-
-.parcel-moving-form-popup-content {
-   margin: 0;
-   padding: 0px !important;
-}
-
-
-}
-
-@media (max-width: 375px) {
-   .parcel-moving-form-inputs {
       grid-template-columns: 1fr;
-      justify-content: center;
-      align-content: center;
-      margin: 0px 23px;
-      gap: 29px;
+      gap: 14px;
    }
+   h2.parcel-moving-form-popup-title {
+      font-size: 24px;
+   }
+   .parcel-form-payment-icons {
+      gap: 16px;
+      justify-content: center;
+   }
+   button.submit-extra-data {
+      padding: 10px 20px;
+   }
+}
 
-   label.parcel-moving-form-input {
-      justify-content: center;
-   }
+@media (min-width: 768px) and (max-width: 1024px) {
    label.parcel-moving-form-input span {
-      position: relative;
-      display: flex;
-   }
-
-   label.parcel-moving-form-input input {
-      width: 200px !important;
-      justify-content: center;
+      position: absolute;
+      left: 66%;
    }
    .parcel-moving-form-popup {
-      width: 100%;
-      padding: 23px 28px !important;
-  }
+      width: 80%;
+            
+   }
+}
+
+
+
+.text-form-b span {
+    font-weight: 900;
+}
+
+.parcel-moving-form-inputs {
+    padding-bottom: 10px;
+}
+
+.hub-page-parcel-form .form-icon-data{
+display:none;
+
+}
+
+
+.form-icon-data{
+display:none;
+}
+
+.parcel-form-payment-icons div img {
+    width: 73px;
+}
+
+
+
+@media (max-width: 460px) {
+     label.parcel-moving-form-input input {
+          width: 345px !important;
+   }
+}
+
+
+@media (min-width: 768px) and (max-width: 1024px) {
+   .parcel-moving-form-inputs {
+       grid-template-columns: 1fr 1fr;
+       justify-content: space-evenly;
+   }
+
+   .parcelform-home-banner .form-icon-data {
+       grid-column-end: span 2;
+       font-size: 12px;
+   }
+
+   .parcelform-home-banner .form-icon-data span {
+       font-size: 12px !important;
+   }
 }
